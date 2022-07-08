@@ -8,7 +8,9 @@ import {
     TextInput,
 } from 'react-native';
 
-function TestPage(props) {
+const gameBoyPrimaryTxtClr = "#E2E5DE";
+
+function LoginPage(props) {
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: '#F2F3F5'}}>
             <View style={styles.imgContainer}>
@@ -23,8 +25,12 @@ function TestPage(props) {
             </View>
 
             <View style={{paddingLeft: 125}}>
-                {/*The Start/Login button*/}
-                <TouchableOpacity style={styles.btnLogin}>
+                {/*The Start/Login button.
+                   The OnPress takes in the props parameter, which has a property called 'navigation' given
+                   from the Stack.Screen component in App.js. Inside this 'navigation' component is a function called 
+                   navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
+                */}
+                <TouchableOpacity style={styles.btnLogin} onPress={() => props.navigation.navigate('Landing')}>
                     <Text style={styles.txtBtnLogin}>Start</Text>
                 </TouchableOpacity>
             </View>
@@ -79,6 +85,4 @@ const styles = StyleSheet.create({
     }
 });
 
-const gameBoyPrimaryTxtClr = "#E2E5DE";
-
-export default TestPage;
+export default LoginPage;
