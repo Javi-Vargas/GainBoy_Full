@@ -2,47 +2,50 @@ import React from 'react';
 import { 
     StyleSheet, 
     Text, 
-    View, SafeAreaView, 
-    Image, 
+    View, SafeAreaView,
     TouchableOpacity,
     TextInput,
 } from 'react-native';
 
 const gameBoyPrimaryTxtClr = "#E2E5DE";
 
-function LoginPage(props) {
+function SignUpPage(props) {
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: '#F2F3F5'}}>
-            <View style={styles.imgContainer}>
-                <Image style={styles.logo} source={require('./../assets/favicon.png')} />
+            <View style={styles.newTitleContainer}>
+                <Text>Create New Profile</Text>
             </View>
 
             <View style={styles.singleFactorContainer}>
                 <TextInput style={styles.txtSingleFactorInfo} placeholder="username" placeholderTextColor={gameBoyPrimaryTxtClr}/>
                 <View style={styles.spaceContainer}/>
-                <TextInput style={styles.txtSingleFactorInfo} placeholder="password" placeholderTextColor={gameBoyPrimaryTxtClr} secureTextEntry={true}/>
-                <View style={{height: 30}}/>
+                <TextInput style={styles.txtSingleFactorInfo} placeholder="email" placeholderTextColor={gameBoyPrimaryTxtClr}/>
+                <View style={styles.spaceContainer}/>
+                <TextInput style={styles.txtSingleFactorInfo} placeholder="password" placeholderTextColor={gameBoyPrimaryTxtClr}/>
+                <View style={styles.spaceContainer}/>
+                <TextInput style={styles.txtSingleFactorInfo} placeholder="confirm password" placeholderTextColor={gameBoyPrimaryTxtClr}/>
+                <View style={{height: 50}}/>
             </View>
 
-            <View style={{paddingLeft: 125}}>
-                {/*The Start/Login button.
+            <View style={{paddingLeft: 120}}>
+                {/*The Create button.
                    The OnPress takes in the props parameter, which has a property called 'navigation' given
                    from the Stack.Screen component in App.js. Inside this 'navigation' component is a function called 
                    navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
                 */}
-                <TouchableOpacity style={styles.btnStart} onPress={() => props.navigation.navigate('Landing')}>
-                    <Text style={styles.txtBtnStart}>Start</Text>
+                <TouchableOpacity style={styles.btnCreate} onPress={() => props.navigation.navigate('Landing')}>
+                    <Text style={styles.txtBtn}>Create</Text>
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.spaceContainer}/>
+            <View style={{height: 30}}/>
 
-            <View style={{paddingLeft: 125}}>
-                {/*The Create Account button.
-                   The 'CreateAccount' Stack.Screen is defined in App.js
+            <View style={{paddingLeft: 120}}>
+                {/*Button for going back to login page.
+                   The 'Login' Stack.Screen is defined in App.js
                 */}
-                <TouchableOpacity style={styles.btnCreate} onPress={() => props.navigation.navigate('SignUp')}>
-                    <Text style={styles.txtBtnCreate}>New User</Text>
+                <TouchableOpacity style={styles.btnLogin} onPress={() => props.navigation.navigate('Login')}>
+                    <Text style={styles.txtBtn}>Login</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -50,21 +53,21 @@ function LoginPage(props) {
 }
 
 const styles = StyleSheet.create({
-    imgContainer: {        
+    newTitleContainer: {
+        paddingTop: "30%", 
         justifyContent: 'center',
-        alignItems: 'center',
-        height: '55%'
+        alignItems: 'center'
     },
     singleFactorContainer: {
-        paddingTop: 10, 
-        paddingLeft: 80,
+        paddingTop: 75, 
+        paddingLeft: 70,
     },
     spaceContainer: {
-        height: 20
+        height: 50
     },
     txtSingleFactorInfo:{
         height: 70,
-        width: 250,
+        width: 275,
         paddingLeft: 25,
         paddingBottom: 8,
         borderTopLeftRadius: 10,
@@ -75,7 +78,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#A482FF',
         color: '#E2E5DE'
     },
-    btnStart: {
+    btnCreate: {
+        height: 40,
+        width: 150,
+        paddingTop: 3,
+        paddingLeft: 40,
+        borderTopLeftRadius: 20,
+        borderBottomLeftRadius: 20,
+        borderTopRightRadius: 20,
+        borderBottomRightRadius: 20,
+        backgroundColor: '#d3d3d3',
+    },
+    btnLogin: {
         height: 40,
         width: 150,
         paddingTop: 3,
@@ -86,29 +100,10 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 20,
         backgroundColor: '#d3d3d3',
     },
-    btnCreate: {
-        height: 40,
-        width: 150,
-        paddingTop: 5,
-        paddingLeft: 35,
-        borderTopLeftRadius: 20,
-        borderBottomLeftRadius: 20,
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
-        backgroundColor: '#d3d3d3',
-    },
-    txtBtnStart:{
+    txtBtn:{
         fontSize: 25, 
         color: '#5D3FD3'
-    },
-    txtBtnCreate:{
-        fontSize: 20, 
-        color: '#5D3FD3'
-    },
-    logo: {
-        width:100,
-        height:100,
     }
 });
 
-export default LoginPage;
+export default SignUpPage;

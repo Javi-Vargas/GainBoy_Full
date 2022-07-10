@@ -7,17 +7,19 @@ import {NavigationContainer}        from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 
 import LoginPage   from "./src/LoginPage"
+import SignUpPage  from "./src/SignUpPage"
 import LandingPage from "./src/LandingPage"
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  return (
-      <NavigationContainer>
-          <Stack.Navigator>
-              <Stack.Screen name="Login" component={LoginPage} options={{headerShown: false}}/>
-              <Stack.Screen name="Landing" component={LandingPage} options={{headerShown: false}}/>
-          </Stack.Navigator>
-      </NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen name="Login" component={LoginPage} options={{headerShown: false}}/>
+                <Stack.Screen name="SignUp" component={SignUpPage} options={{headerShown: false}}/>
+                <Stack.Screen name="Landing" component={LandingPage} options={{headerShown: false}}/>
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }
