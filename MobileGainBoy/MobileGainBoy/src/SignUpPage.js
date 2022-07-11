@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { 
     StyleSheet, 
     Text, 
@@ -9,43 +9,87 @@ import {
 
 const gameBoyPrimaryTxtClr = "#E2E5DE";
 
-function SignUpPage(props) {
+function SignUpPage({navigation}) {
+
+    //The states to check if text input was received
+    const [txtUserName,        setTextUserName]        = useState('');
+    const [txtEmail,           setTextEmail]           = useState('');
+    const [txtPassword,        setTextPassword]        = useState('');
+    const [txtConfirmPassword, setTextConfirmPassword] = useState('');
+
+    const checkTextInput = () => {
+        if (txtUserName === '') {
+            alert('Enter username');
+            return;
+        }
+
+        if (txtEmail === '') {
+            alert('Enter email');
+            return;
+        }
+
+        if (txtPassword === '') {
+            alert('Enter password');
+            return;
+        }
+
+        if (txtConfirmPassword === '') {
+            alert('Confirm password');
+            return;
+        }
+
+        // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
+        // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
+        navigation.navigate('Landing');
+    }
+    
     return (
-        <SafeAreaView style={{flex: 1, backgroundColor: '#F2F3F5'}}>
-            <View style={styles.newTitleContainer}>
+        <SafeAreaView style= {{flex: 1, backgroundColor: '#F2F3F5'}}>
+            <View style= {styles.newTitleContainer}>
                 <Text>Create New Profile</Text>
             </View>
 
-            <View style={styles.singleFactorContainer}>
-                <TextInput style={styles.txtSingleFactorInfo} placeholder="username" placeholderTextColor={gameBoyPrimaryTxtClr}/>
-                <View style={styles.spaceContainer}/>
-                <TextInput style={styles.txtSingleFactorInfo} placeholder="email" placeholderTextColor={gameBoyPrimaryTxtClr}/>
-                <View style={styles.spaceContainer}/>
-                <TextInput style={styles.txtSingleFactorInfo} placeholder="password" placeholderTextColor={gameBoyPrimaryTxtClr}/>
-                <View style={styles.spaceContainer}/>
-                <TextInput style={styles.txtSingleFactorInfo} placeholder="confirm password" placeholderTextColor={gameBoyPrimaryTxtClr}/>
-                <View style={{height: 50}}/>
+            <View style= {styles.singleFactorContainer}>
+                <TextInput style= {styles.txtSingleFactorInfo} 
+                           placeholder= "username" placeholderTextColor= {gameBoyPrimaryTxtClr}
+                           onChangeText= {(value)=>setTextUserName(value)}/>
+
+                <View style= {styles.spaceContainer}/>
+
+                <TextInput style= {styles.txtSingleFactorInfo} 
+                           placeholder= "email" placeholderTextColor= {gameBoyPrimaryTxtClr}
+                           onChangeText= {(value) => setTextEmail(value)}/>
+
+                <View style= {styles.spaceContainer}/>
+
+                <TextInput style= {styles.txtSingleFactorInfo} 
+                           placeholder="password" placeholderTextColor= {gameBoyPrimaryTxtClr}
+                           onChangeText= {(value) => setTextPassword(value)}/>
+
+                <View style= {styles.spaceContainer}/>
+
+                <TextInput style= {styles.txtSingleFactorInfo} 
+                           placeholder= "confirm password" placeholderTextColor= {gameBoyPrimaryTxtClr}
+                           onChangeText= {(value) => setTextConfirmPassword(value)}/>
+
+                <View style= {{height: 50}}/>
             </View>
 
-            <View style={{paddingLeft: 120}}>
-                {/*The Create button.
-                   The OnPress takes in the props parameter, which has a property called 'navigation' given
-                   from the Stack.Screen component in App.js. Inside this 'navigation' component is a function called 
-                   navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
-                */}
-                <TouchableOpacity style={styles.btnCreate} onPress={() => props.navigation.navigate('Landing')}>
-                    <Text style={styles.txtBtn}>Create</Text>
+            <View style= {{paddingLeft: 120}}>
+                {/*The Create button.*/}
+                <TouchableOpacity style= {styles.btnCreate} onPress= {() => {checkTextInput();}}>
+                    <Text style= {styles.txtBtn}>Create</Text>
                 </TouchableOpacity>
             </View>
 
-            <View style={{height: 30}}/>
+            <View style= {{height: 30}}/>
 
-            <View style={{paddingLeft: 120}}>
+            <View style= {{paddingLeft: 120}}>
                 {/*Button for going back to login page.
                    The 'Login' Stack.Screen is defined in App.js
                 */}
-                <TouchableOpacity style={styles.btnLogin} onPress={() => props.navigation.navigate('Login')}>
-                    <Text style={styles.txtBtn}>Login</Text>
+                <TouchableOpacity style= {styles.btnLogin} onPress= {() => navigation.navigate('Login')}>
+                    <Text style= {styles.txtBtn}>Login</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

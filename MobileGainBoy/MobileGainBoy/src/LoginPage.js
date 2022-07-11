@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { 
     StyleSheet, 
     Text, 
@@ -10,39 +10,63 @@ import {
 
 const gameBoyPrimaryTxtClr = "#E2E5DE";
 
-function LoginPage(props) {
+function LoginPage({navigation}) {
+
+    //The states to check if text input was received
+    const [txtUserName, setTextUserName] = useState('');
+    const [txtPassword, setTextPassword] = useState('');
+
+    const checkTextInput = () => {
+        if (txtUserName === '') {
+            alert('Enter username');
+            return;
+        }
+
+        if (txtPassword === '') {
+            alert('Enter password');
+            return;
+        }
+
+        // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
+        // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
+        navigation.navigate('Landing');
+    }
+
     return (
-        <SafeAreaView style={{flex: 1, backgroundColor: '#F2F3F5'}}>
-            <View style={styles.imgContainer}>
-                <Image style={styles.logo} source={require('./../assets/favicon.png')} />
+        <SafeAreaView style= {{flex: 1, backgroundColor: '#F2F3F5'}}>
+            <View style= {styles.imgContainer}>
+                <Image style= {styles.logo} source= {require('./../assets/favicon.png')} />
             </View>
 
-            <View style={styles.singleFactorContainer}>
-                <TextInput style={styles.txtSingleFactorInfo} placeholder="username" placeholderTextColor={gameBoyPrimaryTxtClr}/>
-                <View style={styles.spaceContainer}/>
-                <TextInput style={styles.txtSingleFactorInfo} placeholder="password" placeholderTextColor={gameBoyPrimaryTxtClr} secureTextEntry={true}/>
-                <View style={{height: 30}}/>
+            <View style= {styles.singleFactorContainer}>
+                <TextInput style= {styles.txtSingleFactorInfo} 
+                           placeholder= "username" placeholderTextColor= {gameBoyPrimaryTxtClr}
+                           onChangeText= {(value) => setTextUserName(value)}/>
+
+                <View style= {styles.spaceContainer}/>
+
+                <TextInput style= {styles.txtSingleFactorInfo} 
+                           placeholder= "password" placeholderTextColor= {gameBoyPrimaryTxtClr} secureTextEntry= {true}
+                           onChangeText= {(value) => setTextPassword(value)}/>
+
+                <View style= {{height: 30}}/>
             </View>
 
-            <View style={{paddingLeft: 125}}>
-                {/*The Start/Login button.
-                   The OnPress takes in the props parameter, which has a property called 'navigation' given
-                   from the Stack.Screen component in App.js. Inside this 'navigation' component is a function called 
-                   navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
-                */}
-                <TouchableOpacity style={styles.btnStart} onPress={() => props.navigation.navigate('Landing')}>
-                    <Text style={styles.txtBtnStart}>Start</Text>
+            <View style= {{paddingLeft: 125}}>
+                {/*The Start/Login button*/}
+                <TouchableOpacity style= {styles.btnStart} onPress= {() => {checkTextInput();}}>
+                    <Text style= {styles.txtBtnStart}>Start</Text>
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.spaceContainer}/>
+            <View style= {styles.spaceContainer}/>
 
-            <View style={{paddingLeft: 125}}>
+            <View style= {{paddingLeft: 125}}>
                 {/*The Create Account button.
-                   The 'CreateAccount' Stack.Screen is defined in App.js
+                   The 'SignUp' Stack.Screen is defined in App.js
                 */}
-                <TouchableOpacity style={styles.btnCreate} onPress={() => props.navigation.navigate('SignUp')}>
-                    <Text style={styles.txtBtnCreate}>New User</Text>
+                <TouchableOpacity style= {styles.btnCreate} onPress= {() => navigation.navigate('SignUp')}>
+                    <Text style= {styles.txtBtnCreate}>New User</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
