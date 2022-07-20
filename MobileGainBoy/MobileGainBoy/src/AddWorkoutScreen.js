@@ -2,9 +2,14 @@ import React from "react";
 import { View, Text, Button, StyleSheet, ScrollView, SafeAreaView, ImageBackground, TextInput, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
-import LoginScreen from "./LoginScreen";
 
-const WorkoutScreen = ({ navigation }) => {
+
+const AddWorkoutScreen = ({ navigation }) => {
+    const handleSave = () => {
+        alert("Add Workout To DataBase");
+        navigation.navigate('Landing');
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={{ padding: 20, }}>
@@ -18,7 +23,7 @@ const WorkoutScreen = ({ navigation }) => {
                 <View style={{ paddingTop: 20 }}>
                     <Text>Exercises: </Text>
                     <TouchableOpacity style={styles.addExercise}>
-                        <Ionicons name="add-circle-outline" color="blue" size="30%" />
+                        <Ionicons name="add-circle-outline" color="blue" size={30} />
                         <Text style={{ paddingTop: 8 }}>Add Exercises</Text>
                     </TouchableOpacity>
                 </View>
@@ -26,14 +31,15 @@ const WorkoutScreen = ({ navigation }) => {
             <View style={{ flexDirection: 'row', justifyContent: 'center', justifyContent: 'space-evenly' }}>
                 <Button style={styles.saveBtn}
                     title="Save"
-                    onPress={() => alert("Add Workout To Database")}
+                    onPress={() => handleSave()}
+                //onPress={() => alert("Add Workout To Database")}
                 />
             </View>
         </SafeAreaView>
     )
 }
 
-export default WorkoutScreen;
+export default AddWorkoutScreen;
 
 const styles = StyleSheet.create({
     container: {

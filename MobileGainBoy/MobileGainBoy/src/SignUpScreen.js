@@ -44,70 +44,59 @@ function SignUpScreen({ navigation }) {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc', justifyContent: 'center' }}>
             <View style={styles.newTitleContainer}>
-                <Text style={styles.bigHeader}>Update Your Personal Info</Text>
+                <Text>Create New Profile</Text>
             </View>
 
             <View style={styles.singleFactorContainer}>
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="New Username" placeholderTextColor={gameBoyPrimaryTxtClr}
+                    placeholder="username" placeholderTextColor={gameBoyPrimaryTxtClr}
                     onChangeText={(value) => setTextUserName(value)} />
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="New Email" placeholderTextColor={gameBoyPrimaryTxtClr}
+                    placeholder="email" placeholderTextColor={gameBoyPrimaryTxtClr}
                     onChangeText={(value) => setTextEmail(value)} />
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="New Password" placeholderTextColor={gameBoyPrimaryTxtClr}
+                    placeholder="password" placeholderTextColor={gameBoyPrimaryTxtClr}
                     onChangeText={(value) => setTextPassword(value)} />
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="Confirm New Password" placeholderTextColor={gameBoyPrimaryTxtClr}
+                    placeholder="confirm password" placeholderTextColor={gameBoyPrimaryTxtClr}
                     onChangeText={(value) => setTextConfirmPassword(value)} />
 
                 <View style={{ height: 50 }} />
             </View>
 
-            <View style={styles.bottomButtons}>
-                {/*The Save changes button.*/}
-                <TouchableOpacity style={styles.btnSave} onPress={() => { checkTextInput(); }}>
-                    <Text style={styles.txtBtn}>Save</Text>
-                </TouchableOpacity>
-                <View style={{ height: 30 }} />
-                <TouchableOpacity style={styles.btnLogin} onPress={() => navigation.navigate('Login')}>
-                    <Text style={styles.txtBtn}>Cancel</Text>
+            <View style={{ paddingLeft: 120 }}>
+                {/*The Create button.*/}
+                <TouchableOpacity style={styles.btnCreate} onPress={() => { checkTextInput(); }}>
+                    <Text style={styles.txtBtn}>Create</Text>
                 </TouchableOpacity>
             </View>
 
+            <View style={{ height: 30 }} />
 
             <View style={{ paddingLeft: 120 }}>
                 {/*Button for going back to login page.
                    The 'Login' Stack.Screen is defined in App.js
                 */}
+                <TouchableOpacity style={styles.btnLogin} onPress={() => navigation.navigate('Login')}>
+                    <Text style={styles.txtBtn}>Login</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    bigHeader: {
-        fontWeight: "bold",
-        fontSize: 20,
-        top: 10
-    },
-    bottomButtons: {
-        paddingLeft: 120,
-        flexDirection: 'column',
-        justifyContent: 'space-evenly'
-
-    },
     newTitleContainer: {
         paddingTop: "10%",
         justifyContent: 'center',
@@ -133,8 +122,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#A482FF',
         color: '#E2E5DE'
     },
-    btnSave: {
-        flexDirection: 'row',
+    btnCreate: {
         height: 40,
         width: 150,
         paddingTop: 3,

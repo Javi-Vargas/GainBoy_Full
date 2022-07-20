@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, StatusBar } from 'react-native';
 
 const LogScreen = ({ navigation }) => {
     return (
@@ -21,5 +21,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: "#8fcbbc",
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     }
 })
