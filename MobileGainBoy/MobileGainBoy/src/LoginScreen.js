@@ -20,50 +20,25 @@ function LoginScreen({ navigation }) {
 
     const login = async () => {
         try {
-            if (txtEmail === '') {
-                alert('Enter email');
-                return;
-            }
-    
-            if (txtPassword === '') {
-                alert('Enter password');
-                return;
-            }
+            var obj = {email:txtEmail.trim(),password:txtPassword.trim()};
+            var js = JSON.stringify(obj);
 
-            //This is to avoid hitting the API since it's currently not working
-            let preprocessor = true
+            const response = await fetch(
+                'https://gainzboy.herokuapp.com/auth/login',
+                {method:'POST', body:js, headers:{'Content-Type': 'application/json'}}
+            );
 
-            if (preprocessor)
+            var res = JSON.parse(await response.text());
+            
+            if(res.errorMessage != undefined)
             {
-                navigation.navigate('Workout');
+                alert(res.errorMessage);
             }
             else
             {
-                var obj = {login:txtEmail.trim(),password:txtPassword.trim()};
-                var js = JSON.stringify(obj);
-
-                const response = await fetch(
-                    'https://gainboy.herokuapp.com/api/login',
-                    {method:'POST', body:js, headers:{'Content-Type': 'application/json'}}
-                );
-
-                var res = JSON.parse(await response.text());
-                
-                if(res.id <= 0)
-                {
-                    alert("User/Password combination incorrect");
-                    alert(txtEmail);
-                }
-                else
-                {
-                    global.firstName = res.firstName;
-                    global.lastName = res.lastName;
-                    global.userId = res.id;
-
-                    // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-                    // is a function called navigate() that takes the name of another screen, in this case 'Workout', again defined in App.js
-                    navigation.navigate('Workout');
-                }
+                // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
+                // is a function called navigate() that takes the name of another screen, in this case 'Workout', again defined in App.js
+                navigation.navigate('Workout');
             }
         }
         catch(e) 
@@ -76,7 +51,6 @@ function LoginScreen({ navigation }) {
         <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc' }}>
             <View style={styles.imgContainer}>
                 <Image style={styles.logo} source={require('./../assets/gameboy2.0.png')} />
-                {/* <Image style= {styles.logo} source= {require('./../assets/favicon.png')} /> */}
             </View>
 
             <View style={styles.singleFactorContainer}>
@@ -133,6 +107,7 @@ const styles = StyleSheet.create({
         height: 70,
         width: 250,
         paddingLeft: 25,
+        paddingRight: 25,
         paddingBottom: 8,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,

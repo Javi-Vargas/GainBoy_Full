@@ -19,66 +19,25 @@ function SignUpScreen({ navigation }) {
 
     const register = async () => {
         try {
-            if (txtUserFullName === '') {
-                alert('Enter your full name');
-                return;
-            }
-    
-            if (txtEmail === '') {
-                alert('Enter email');
-                return;
-            }
-    
-            if (txtPassword === '') {
-                alert('Enter password');
-                return;
-            }
-    
-            if (txtConfirmPassword === '') {
-                alert('Confirm password');
-                return;
-            }
+            var obj = {email:txtEmail.trim(),password:txtPassword.trim(),passwordVerify:txtConfirmPassword.trim()};
+            var js = JSON.stringify(obj);
 
-            if (txtConfirmPassword != txtPassword)
+            const response = await fetch(
+                'https://gainzboy.herokuapp.com/auth/Register',
+                {method:'POST', body:js, headers:{'Content-Type': 'application/json'}}
+            );
+
+            var res = JSON.parse(await response.text());
+            
+            if(res.errorMessage != undefined)
             {
-                alert('Confirmed password does not match given password');
-                return;
-            }
-
-            //This is to avoid hitting the API since it's currently not working
-            let preprocessor = true
-
-            if (preprocessor)
-            {
-                navigation.navigate('Workout');
+                alert(res.errorMessage);
             }
             else
             {
-                let names = txtUserFullName.split(' ');
-                global.firstName = names[0].trim();
-                global.lastName  = names[1].trim();
-                var obj = {firstName:global.firstName,lastName:global.lastName,email:txtEmail.trim(),password:txtConfirmPassword.trim()};
-                var js = JSON.stringify(obj);
-
-                const response = await fetch(
-                    'https://gainboy.herokuapp.com/api/login',
-                    {method:'POST', body:js, headers:{'Content-Type': 'application/json'}}
-                );
-
-                var res = JSON.parse(await response.text());
-                
-                if(res.id <= 0)
-                {
-                    alert("Couldn't create new account");
-                }
-                else
-                {
-                    global.userId = res.id;
-
-                    // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-                    // is a function called navigate() that takes the name of another screen, in this case 'Workout', again defined in App.js
-                    navigation.navigate('Workout');
-                }
+                // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
+                // is a function called navigate() that takes the name of another screen, in this case 'Workout', again defined in App.js
+                navigation.navigate('Workout');
             }
         }
         catch(e) 
@@ -157,6 +116,7 @@ const styles = StyleSheet.create({
         height: 70,
         width: 275,
         paddingLeft: 25,
+        paddingRight: 25,
         paddingBottom: 8,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
