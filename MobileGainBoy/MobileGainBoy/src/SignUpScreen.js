@@ -12,37 +12,81 @@ const gameBoyPrimaryTxtClr = "#E2E5DE";
 function SignUpScreen({ navigation }) {
 
     //The states to check if text input was received
-    const [txtUserName, setTextUserName] = useState('');
-    const [txtEmail, setTextEmail] = useState('');
-    const [txtPassword, setTextPassword] = useState('');
+    const [txtUserFullName,    setTextFullName]        = useState('');
+    const [txtEmail,           setTextEmail]           = useState('');
+    const [txtPassword,        setTextPassword]        = useState('');
     const [txtConfirmPassword, setTextConfirmPassword] = useState('');
 
-    const checkTextInput = () => {
-        if (txtUserName === '') {
-            alert('Enter username');
-            return;
-        }
+    const register = async () => {
+        try {
+            if (txtUserFullName === '') {
+                alert('Enter your full name');
+                return;
+            }
+    
+            if (txtEmail === '') {
+                alert('Enter email');
+                return;
+            }
+    
+            if (txtPassword === '') {
+                alert('Enter password');
+                return;
+            }
+    
+            if (txtConfirmPassword === '') {
+                alert('Confirm password');
+                return;
+            }
 
-        if (txtEmail === '') {
-            alert('Enter email');
-            return;
-        }
+            if (txtConfirmPassword != txtPassword)
+            {
+                alert('Confirmed password does not match given password');
+                return;
+            }
 
-        if (txtPassword === '') {
-            alert('Enter password');
-            return;
-        }
+            //This is to avoid hitting the API since it's currently not working
+            let preprocessor = true
 
-        if (txtConfirmPassword === '') {
-            alert('Confirm password');
-            return;
-        }
+            if (preprocessor)
+            {
+                navigation.navigate('Workout');
+            }
+            else
+            {
+                let names = txtUserFullName.split(' ');
+                global.firstName = names[0].trim();
+                global.lastName  = names[1].trim();
+                var obj = {firstName:global.firstName,lastName:global.lastName,email:txtEmail.trim(),password:txtConfirmPassword.trim()};
+                var js = JSON.stringify(obj);
 
-        // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-        // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
-        navigation.navigate('Landing');
+                const response = await fetch(
+                    'https://gainboy.herokuapp.com/api/login',
+                    {method:'POST', body:js, headers:{'Content-Type': 'application/json'}}
+                );
+
+                var res = JSON.parse(await response.text());
+                
+                if(res.id <= 0)
+                {
+                    alert("Couldn't create new account");
+                }
+                else
+                {
+                    global.userId = res.id;
+
+                    // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
+                    // is a function called navigate() that takes the name of another screen, in this case 'Workout', again defined in App.js
+                    navigation.navigate('Workout');
+                }
+            }
+        }
+        catch(e) 
+        {
+            alert(e.message);
+        }
     }
-
+    
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc', justifyContent: 'center' }}>
             <View style={styles.newTitleContainer}>
@@ -51,33 +95,33 @@ function SignUpScreen({ navigation }) {
 
             <View style={styles.singleFactorContainer}>
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="username" placeholderTextColor={gameBoyPrimaryTxtClr}
-                    onChangeText={(value) => setTextUserName(value)} />
+                           placeholder="full name" placeholderTextColor={gameBoyPrimaryTxtClr}
+                           onChangeText={(value) => setTextFullName(value)}/>
+
+                <View style={styles.spaceContainer}/>
+
+                <TextInput style={styles.txtSingleFactorInfo} 
+                           placeholder= "email" placeholderTextColor={gameBoyPrimaryTxtClr}
+                           onChangeText={(value) => setTextEmail(value)}/>
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="email" placeholderTextColor={gameBoyPrimaryTxtClr}
-                    onChangeText={(value) => setTextEmail(value)} />
+                           placeholder="password" placeholderTextColor={gameBoyPrimaryTxtClr}
+                           onChangeText={(value) => setTextPassword(value)}/>
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="password" placeholderTextColor={gameBoyPrimaryTxtClr}
-                    onChangeText={(value) => setTextPassword(value)} />
-
-                <View style={styles.spaceContainer} />
-
-                <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="confirm password" placeholderTextColor={gameBoyPrimaryTxtClr}
-                    onChangeText={(value) => setTextConfirmPassword(value)} />
+                           placeholder="confirm password" placeholderTextColor={gameBoyPrimaryTxtClr}
+                           onChangeText={(value) => setTextConfirmPassword(value)}/>
 
                 <View style={{ height: 50 }} />
             </View>
 
             <View style={{ paddingLeft: 120 }}>
                 {/*The Create button.*/}
-                <TouchableOpacity style={styles.btnCreate} onPress={() => { checkTextInput(); }}>
+                <TouchableOpacity style={styles.btnCreate} onPress={() => { register(); }}>
                     <Text style={styles.txtBtn}>Create</Text>
                 </TouchableOpacity>
             </View>

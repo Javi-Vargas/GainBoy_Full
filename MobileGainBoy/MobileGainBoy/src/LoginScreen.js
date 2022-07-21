@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { Keyboard } from 'react-native';
-import {
-    StyleSheet,
-    Text,
-    View, SafeAreaView,
-    Image,
+import { 
+    Keyboard,
+    StyleSheet, 
+    Text, 
+    View, SafeAreaView, 
+    Image, 
     TouchableOpacity,
     TextInput,
-    StatusBar,
-    ScrollView,
     TouchableWithoutFeedback
 } from 'react-native';
 
@@ -17,53 +15,80 @@ const gameBoyPrimaryTxtClr = "#E2E5DE";
 function LoginScreen({ navigation }) {
 
     //The states to check if text input was received
-    const [txtUserName, setTextUserName] = useState('');
+    const [txtEmail,    setTextEmail]    = useState('');
     const [txtPassword, setTextPassword] = useState('');
 
-    const checkTextInput = () => {
-        if (txtUserName === '') {
-            alert('Enter username');
-            return;
+    const login = async () => {
+        try {
+            if (txtEmail === '') {
+                alert('Enter email');
+                return;
+            }
+    
+            if (txtPassword === '') {
+                alert('Enter password');
+                return;
+            }
+
+            //This is to avoid hitting the API since it's currently not working
+            let preprocessor = true
+
+            if (preprocessor)
+            {
+                navigation.navigate('Workout');
+            }
+            else
+            {
+                var obj = {login:txtEmail.trim(),password:txtPassword.trim()};
+                var js = JSON.stringify(obj);
+
+                const response = await fetch(
+                    'https://gainboy.herokuapp.com/api/login',
+                    {method:'POST', body:js, headers:{'Content-Type': 'application/json'}}
+                );
+
+                var res = JSON.parse(await response.text());
+                
+                if(res.id <= 0)
+                {
+                    alert("User/Password combination incorrect");
+                    alert(txtEmail);
+                }
+                else
+                {
+                    global.firstName = res.firstName;
+                    global.lastName = res.lastName;
+                    global.userId = res.id;
+
+                    // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
+                    // is a function called navigate() that takes the name of another screen, in this case 'Workout', again defined in App.js
+                    navigation.navigate('Workout');
+                }
+            }
         }
-
-        if (txtPassword === '') {
-            alert('Enter password');
-            return;
+        catch(e) 
+        {
+            alert(e.message);
         }
-
-        navigation.navigate('Landing');
-        // var obj = { login: global.loginName.trim(), password: global.password.trim() };
-        // var js = JSON.stringify(obj);
-
-        // const response = await fetch('https://gainboy.herokuapp.com/api/login',
-        //     { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } });
-        // // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-        // // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
-        // var res = JSON.parse(await response.text());
-        // if (res.id <= 0) {
-        //     alert("User/Password combination incorrect");
-        // }
-        // else {
-        //     navigation.navigate('Landing');
-        // }
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc', }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc' }}>
             <View style={styles.imgContainer}>
                 <Image style={styles.logo} source={require('./../assets/gameboy2.0.png')} />
+                {/* <Image style= {styles.logo} source= {require('./../assets/favicon.png')} /> */}
             </View>
 
             <View style={styles.singleFactorContainer}>
-                <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="username" placeholderTextColor={gameBoyPrimaryTxtClr}
-                    onChangeText={(value) => setTextUserName(value)} />
+                <TextInput style={styles.txtSingleFactorInfo} 
+                           placeholder="email" placeholderTextColor={gameBoyPrimaryTxtClr}
+                           onChangeText={(value) => setTextEmail(value)}/>
 
                 <View style={styles.spaceContainer} />
 
-                <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="password" placeholderTextColor={gameBoyPrimaryTxtClr} secureTextEntry={true}
-                    onChangeText={(value) => setTextPassword(value)} />
+                <TextInput style={styles.txtSingleFactorInfo} 
+                           placeholder="password" placeholderTextColor={gameBoyPrimaryTxtClr} secureTextEntry={true}
+                           onChangeText={(value) => setTextPassword(value)}/>
 
                 <View style={{ height: 30 }} />
             </View>
@@ -71,7 +96,7 @@ function LoginScreen({ navigation }) {
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss}>
                 <View style={{ paddingLeft: 125 }}>
                     {/*The Start/Login button*/}
-                    <TouchableOpacity style={styles.btnStart} onPress={() => { checkTextInput(); }}>
+                    <TouchableOpacity style={styles.btnStart} onPress={() => { login(); }}>
                         <Text style={styles.txtBtnStart}>Start</Text>
                     </TouchableOpacity>
                 </View>

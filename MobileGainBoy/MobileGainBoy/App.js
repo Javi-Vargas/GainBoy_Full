@@ -6,19 +6,27 @@ import React from 'react';
 import {NavigationContainer}        from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 
-import LoginPage   from "./src/LoginPage"
-import SignUpPage  from "./src/SignUpPage"
-import LandingPage from "./src/LandingPage"
+import LoginScreen      from "./src/LoginScreen"
+import SignUpScreen     from "./src/SignUpScreen"
+import WorkoutScreen    from "./src/WorkoutScreen"
+import AddWorkoutScreen from "./src/AddWorkoutScreen"
+import LogScreen        from "./src/LogScreen"
 
 const Stack = createNativeStackNavigator();
+
+global.userId = -1;
+global.firstName = "";
+global.lastName = "";
 
 export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="Login" component={LoginPage} options={{headerShown: false}}/>
-                <Stack.Screen name="SignUp" component={SignUpPage} options={{headerShown: false}}/>
-                <Stack.Screen name="Landing" component={LandingPage} options={{headerShown: false}}/>
+                <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+                <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}}/>
+                <Stack.Screen name="Workout" component={WorkoutScreen} options={{headerShown: false}}/>
+                <Stack.Screen name="AddWorkout" component={AddWorkoutScreen} options={{headerShown: false}}/>
+                <Stack.Screen name="Log" component={LogScreen} options={{headerShown: false}}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
