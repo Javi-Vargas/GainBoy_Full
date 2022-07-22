@@ -10,8 +10,6 @@ import {
     TouchableWithoutFeedback
 } from 'react-native';
 
-const gameBoyPrimaryTxtClr = "#E2E5DE";
-
 function LoginScreen({ navigation }) {
 
     //The states to check if text input was received
@@ -37,8 +35,8 @@ function LoginScreen({ navigation }) {
             else
             {
                 // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-                // is a function called navigate() that takes the name of another screen, in this case 'Workout', again defined in App.js
-                navigation.navigate('Workout');
+                // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
+                navigation.navigate('Landing');
             }
         }
         catch(e) 
@@ -50,18 +48,18 @@ function LoginScreen({ navigation }) {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc' }}>
             <View style={styles.imgContainer}>
-                <Image style={styles.logo} source={require('./../assets/gameboy2.0.png')} />
+                <Image style={styles.logo} source={require('./../../assets/gameboy2.0.png')} />
             </View>
 
             <View style={styles.singleFactorContainer}>
                 <TextInput style={styles.txtSingleFactorInfo} 
-                           placeholder="email" placeholderTextColor={gameBoyPrimaryTxtClr}
+                           placeholder="email" placeholderTextColor={global.gameBoyPrimaryTxtClr}
                            onChangeText={(value) => setTextEmail(value)}/>
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo} 
-                           placeholder="password" placeholderTextColor={gameBoyPrimaryTxtClr} secureTextEntry={true}
+                           placeholder="password" placeholderTextColor={global.gameBoyPrimaryTxtClr} secureTextEntry={true}
                            onChangeText={(value) => setTextPassword(value)}/>
 
                 <View style={{ height: 30 }} />
@@ -84,6 +82,14 @@ function LoginScreen({ navigation }) {
                 */}
                 <TouchableOpacity style={styles.btnCreate} onPress={() => navigation.navigate('SignUp')}>
                     <Text style={styles.txtBtnCreate}>New User</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View style={{paddingTop: 25, paddingLeft: 145}}>
+                <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+                    <Text style={{color:'blue'}}>
+                        Forgot Password?
+                    </Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

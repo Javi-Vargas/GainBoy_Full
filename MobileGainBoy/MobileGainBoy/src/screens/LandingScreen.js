@@ -2,7 +2,7 @@ import React from "react";
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Tabs from '../navigation/tabs';
+import Tabs from '../../navigation/Tabs';
 
 const LandingScreen = ({ navigation }) => {
     return (

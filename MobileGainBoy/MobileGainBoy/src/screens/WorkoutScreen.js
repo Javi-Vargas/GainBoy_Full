@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, Button, StyleSheet, ScrollView, SafeAreaView, ImageBackground, TextInput, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
-import AddWorkoutScreen from './AddWorkoutScreen';
 
 const WorkoutScreen = ({ navigation }) => {
     return (

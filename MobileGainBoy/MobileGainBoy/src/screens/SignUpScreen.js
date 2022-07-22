@@ -7,8 +7,6 @@ import {
     TextInput,
 } from 'react-native';
 
-const gameBoyPrimaryTxtClr = "#E2E5DE";
-
 function SignUpScreen({ navigation }) {
 
     //The states to check if text input was received
@@ -36,8 +34,8 @@ function SignUpScreen({ navigation }) {
             else
             {
                 // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-                // is a function called navigate() that takes the name of another screen, in this case 'Workout', again defined in App.js
-                navigation.navigate('Workout');
+                // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
+                navigation.navigate('Landing');
             }
         }
         catch(e) 
@@ -54,25 +52,25 @@ function SignUpScreen({ navigation }) {
 
             <View style={styles.singleFactorContainer}>
                 <TextInput style={styles.txtSingleFactorInfo}
-                           placeholder="full name" placeholderTextColor={gameBoyPrimaryTxtClr}
+                           placeholder="full name" placeholderTextColor={global.gameBoyPrimaryTxtClr}
                            onChangeText={(value) => setTextFullName(value)}/>
 
                 <View style={styles.spaceContainer}/>
 
                 <TextInput style={styles.txtSingleFactorInfo} 
-                           placeholder= "email" placeholderTextColor={gameBoyPrimaryTxtClr}
+                           placeholder= "email" placeholderTextColor={global.gameBoyPrimaryTxtClr}
                            onChangeText={(value) => setTextEmail(value)}/>
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                           placeholder="password" placeholderTextColor={gameBoyPrimaryTxtClr}
+                           placeholder="password" placeholderTextColor={global.gameBoyPrimaryTxtClr}
                            onChangeText={(value) => setTextPassword(value)}/>
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                           placeholder="confirm password" placeholderTextColor={gameBoyPrimaryTxtClr}
+                           placeholder="confirm password" placeholderTextColor={global.gameBoyPrimaryTxtClr}
                            onChangeText={(value) => setTextConfirmPassword(value)}/>
 
                 <View style={{ height: 50 }} />

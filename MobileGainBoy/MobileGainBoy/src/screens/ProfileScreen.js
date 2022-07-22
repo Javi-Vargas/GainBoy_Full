@@ -7,8 +7,6 @@ import {
     TextInput,
 } from 'react-native';
 
-const gameBoyPrimaryTxtClr = "#E2E5DE";
-
 function SignUpScreen({ navigation }) {
 
     //The states to check if text input was received
@@ -51,25 +49,25 @@ function SignUpScreen({ navigation }) {
 
             <View style={styles.singleFactorContainer}>
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="New Username" placeholderTextColor={gameBoyPrimaryTxtClr}
+                    placeholder="New Username" placeholderTextColor={global.gameBoyPrimaryTxtClr}
                     onChangeText={(value) => setTextUserName(value)} />
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="New Email" placeholderTextColor={gameBoyPrimaryTxtClr}
+                    placeholder="New Email" placeholderTextColor={global.gameBoyPrimaryTxtClr}
                     onChangeText={(value) => setTextEmail(value)} />
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="New Password" placeholderTextColor={gameBoyPrimaryTxtClr}
+                    placeholder="New Password" placeholderTextColor={global.gameBoyPrimaryTxtClr}
                     onChangeText={(value) => setTextPassword(value)} />
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="Confirm New Password" placeholderTextColor={gameBoyPrimaryTxtClr}
+                    placeholder="Confirm New Password" placeholderTextColor={global.gameBoyPrimaryTxtClr}
                     onChangeText={(value) => setTextConfirmPassword(value)} />
 
                 <View style={{ height: 50 }} />
