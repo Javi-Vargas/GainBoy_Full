@@ -10,13 +10,16 @@ import LoginScreen          from "./src/screens/LoginScreen";
 import SignUpScreen         from "./src/screens/SignUpScreen";
 import LandingScreen        from "./src/screens/LandingScreen";
 import ForgotPasswordScreen from "./src/screens/ForgotPasswordScreen";
+import VerificationScreen   from './src/screens/VerificationScreen';
 
 const Stack = createNativeStackNavigator();
 
 global.gameBoyPrimaryTxtClr = "#E2E5DE";
-global.userId = -1;
+global.userId    = -1;
+global.email     = "";
+global.password  = "";
 global.firstName = "";
-global.lastName = "";
+global.lastName  = "";
 
 export default function App() {
     return (
@@ -26,6 +29,7 @@ export default function App() {
                 <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}}/>
                 <Stack.Screen name= "Landing" component={LandingScreen} options={{headerShown: false}}/>
                 <Stack.Screen name= "ForgotPassword" component={ForgotPasswordScreen} options={{headerShown: false}}/>
+                <Stack.Screen name= "Verification" component={VerificationScreen} options={{headerShown: false}}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

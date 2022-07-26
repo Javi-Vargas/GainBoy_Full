@@ -4,6 +4,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 
 const WorkoutScreen = ({ navigation }) => {
+    
+    const logout = () => {
+        global.email = "";
+        global.password = "";
+        navigation.navigate('Login');
+    }
+    
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={{ paddingTop: 50, paddingHorizontal: 10 }}>
@@ -29,7 +36,7 @@ const WorkoutScreen = ({ navigation }) => {
             </ScrollView>
             <Button
                 title="LogOut"
-                onPress={() => navigation.navigate('Login')}
+                onPress={() => {logout();}}
             />
         </SafeAreaView >
     )

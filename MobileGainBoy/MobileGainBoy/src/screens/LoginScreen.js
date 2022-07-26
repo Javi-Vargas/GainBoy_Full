@@ -10,6 +10,11 @@ import {
     TouchableWithoutFeedback
 } from 'react-native';
 
+// PREPROCESSORS for Unit testing
+const UNIT_VALID_LOGIN   = false;
+const UNIT_INVALID_LOGIN = false;
+const UNIT_NOT_VERIFIED  = false;
+
 function LoginScreen({ navigation }) {
 
     //The states to check if text input was received
@@ -18,7 +23,31 @@ function LoginScreen({ navigation }) {
 
     const login = async () => {
         try {
-            var obj = {email:txtEmail.trim(),password:txtPassword.trim()};
+
+            var obj;
+
+            // <----------UNIT TESTING----------> 
+            //  Automated test for logging in with existing user
+            if (UNIT_VALID_LOGIN)
+            {
+                obj = {email:'monkncheese@gmail.com', password:'nuggets'};
+            }
+            // Automated test for wrong email/password combination
+            else if (UNIT_INVALID_LOGIN)
+            {
+                obj = {email:'no_way_this_would_ever_be_valid@wut.com', password:'SUPER_STRONG_PASSWORD'};
+            }
+            // Automated test for wrong email/password combination
+            else if (UNIT_NOT_VERIFIED)
+            {
+                obj = {email:'do_not_verify_cop4331@gmail.com', password:'COP4331'};
+            }
+            // --------------------------------->
+            else
+            {
+                obj = {email:txtEmail.trim(), password:txtPassword.trim()};
+            }
+
             var js = JSON.stringify(obj);
 
             const response = await fetch(
@@ -34,6 +63,9 @@ function LoginScreen({ navigation }) {
             }
             else
             {
+                global.email = txtEmail.trim();
+                global.password = txtPassword.trim();
+
                 // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
                 // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
                 navigation.navigate('Landing');

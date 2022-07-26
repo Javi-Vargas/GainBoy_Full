@@ -7,6 +7,11 @@ import {
     TextInput,
 } from 'react-native';
 
+// PREPROCESSORS for Unit testing
+const UNIT_SECURE_PASSWORD = false;
+const UNIT_REGISTER        = false;
+const UNIT_MISMATCH        = false;
+
 function SignUpScreen({ navigation }) {
 
     //The states to check if text input was received
@@ -17,7 +22,31 @@ function SignUpScreen({ navigation }) {
 
     const register = async () => {
         try {
-            var obj = {email:txtEmail.trim(),password:txtPassword.trim(),passwordVerify:txtConfirmPassword.trim()};
+
+            var obj;
+
+            // <----------UNIT TEST----------> 
+            //  Automated test for making sure password.length is >= 6
+            if (UNIT_SECURE_PASSWORD)
+            {
+                obj = {email:'no_way_this_would_ever_be_valid@wut.com',password:'five',passwordVerify:'five'};
+            }
+            //  Automated test for registering in with existing user
+            else if (UNIT_REGISTER)
+            {
+                obj = {email:'monkncheese@gmail.com',password:'nuggets',passwordVerify:'nuggets'};
+            }
+            //  Automated test for passwords not matching
+            else if (UNIT_MISMATCH)
+            {
+                obj = {email:'no_way_this_would_ever_be_valid@wut.com',password:'nuggets',passwordVerify:'warriors'};
+            }
+            // --------------------------------->
+            else
+            {
+                obj = {email:txtEmail.trim(),password:txtPassword.trim(),passwordVerify:txtConfirmPassword.trim()};
+            }
+
             var js = JSON.stringify(obj);
 
             const response = await fetch(
@@ -27,15 +56,18 @@ function SignUpScreen({ navigation }) {
 
             var res = JSON.parse(await response.text());
             
-            if(res.errorMessage != undefined)
+            if(res.status == 'PENDING')
             {
-                alert(res.errorMessage);
+                global.email = txtEmail.trim();
+                global.password = txtConfirmPassword.trim();
+                
+                // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
+                // is a function called navigate() that takes the name of another screen, in this case 'Verification', again defined in App.js
+                navigation.navigate('Verification');
             }
             else
             {
-                // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-                // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
-                navigation.navigate('Landing');
+                alert(res.errorMessage);
             }
         }
         catch(e) 

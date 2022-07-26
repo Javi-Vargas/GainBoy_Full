@@ -1,41 +1,54 @@
-import React, { useState } from 'react';
-import { Button } from 'react-native';
+import React from 'react';
 import {
-    Keyboard,
     StyleSheet,
     Text,
     View, SafeAreaView,
     Image,
-    TouchableOpacity,
-    TextInput,
-    TouchableWithoutFeedback
+    TouchableOpacity
 } from 'react-native';
 
-function LoginScreen({ navigation }) {
+function VerificationScreen({ navigation }) {
 
-    //The states to check if text input was received
-    const [txtEmail, setTextEmail] = useState('');
-    const [txtPassword, setTextPassword] = useState('');
-
-    const ifVerify = async () => {
+    const resend = async () => {
         try {
-            var obj = { email: txtEmail.trim(), password: txtPassword.trim() };
+            var obj = { email: global.email, password: global.password, passwordVerify: global.password };
             var js = JSON.stringify(obj);
 
             const response = await fetch(
-                'https://gainzboy.herokuapp.com/auth/login',
+                'https://gainzboy.herokuapp.com/auth/Register',
                 { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
             );
 
             var res = JSON.parse(await response.text());
 
-            if (res.errorMessage != undefined) {
-                alert(res.errorMessage);
-            }
-            else {
+            alert(res.errorMessage);
+        }
+        catch (e) {
+            alert(e.message);
+        }
+    }
+
+    const finish = async () => {
+        try {
+            var obj = { email: global.email, password: global.password, passwordVerify: global.password };
+            var js = JSON.stringify(obj);
+
+            const response = await fetch(
+                'https://gainzboy.herokuapp.com/auth/Register',
+                { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
+            );
+
+            var res = JSON.parse(await response.text());
+
+            if (res.errorMessage == "An account with this email already exists.")
+            {
                 // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
                 // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
                 navigation.navigate('Landing');
+            }
+            else
+            {
+                alert(res.errorMessage)
             }
         }
         catch (e) {
@@ -46,33 +59,40 @@ function LoginScreen({ navigation }) {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc' }}>
             <View style={styles.imgContainer}>
-                <Image style={styles.logo} source={require('../assets/gameboy2.0.png')} />
+                <Image style={styles.logo} source={require('./../../assets/gameboy2.0.png')} />
             </View>
 
+            {/*Verify email text*/}
+            <View>
+                <Text style={styles.txtVerifyTitle}>Please verify your email</Text>
 
-            <View styles={{ flexDirection: 'column', justifyContent: 'center' }}>
-                <Text style={{ paddingLeft: 40 }} >Click Button To Continue After Email Verification</Text>
-                <TouchableOpacity onPress={ifVerify}
-                    style={styles.verifyBtn}
-                >
-                    <Text style={styles.verifyButton}>Continue</Text>
+                <View style={styles.spaceContainer} />
+
+                <Text style={styles.txtVerifyMessage}>
+                    We sent an email to your inbox. Click on the link in the email to complete your signup.
+                </Text>
+            </View>
+
+            <View style={{height: 40}} />
+
+            <View style={{paddingLeft: 100}}>
+                {/*The Resend button.*/}
+                <TouchableOpacity style={styles.btn} onPress={() => {resend(); }}>
+                    <Text style={styles.txtBtn}>Resend Email</Text>
+                </TouchableOpacity>
+
+                <View style={{height: 40}} />
+
+                <View style={{paddingLeft: 50}}>
+                <TouchableOpacity onPress={() => {finish();}}>
+                    <Text style={{fontSize: 25, color:'#5D3FD3'}}>
+                        Continue
+                    </Text>
                 </TouchableOpacity>
             </View>
-
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss}>
-                <View style={{ paddingLeft: 125 }}>
-                    {/*The Start/Login button*/}
-
-                </View>
-            </TouchableWithoutFeedback>
-
-            <View style={styles.spaceContainer} />
-
-            <View style={{ paddingLeft: 125 }}>
-                {/*The Create Account button.
-                   The 'SignUp' Stack.Screen is defined in App.js
-                */}
             </View>
+
+            
         </SafeAreaView>
     );
 }
@@ -93,43 +113,22 @@ const styles = StyleSheet.create({
     imgContainer: {
         justifyContent: 'center',
         alignItems: 'center',
-        height: '45%',
+        height: '35%'
     },
-    singleFactorContainer: {
-        paddingTop: 10,
-        paddingLeft: 80,
+    txtVerifyTitle: {
+        paddingLeft: 20,
+        fontSize: 35
+    },
+    txtVerifyMessage: {
+        paddingLeft: 25,
+        fontSize: 20
     },
     spaceContainer: {
         height: 20
     },
-    txtSingleFactorInfo: {
-        height: 70,
-        width: 250,
-        paddingLeft: 25,
-        paddingRight: 25,
-        paddingBottom: 8,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 50,
-        fontSize: 25,
-        backgroundColor: '#A482FF',
-        color: '#E2E5DE'
-    },
-    btnStart: {
+    btn: {
         height: 40,
-        width: 150,
-        paddingTop: 3,
-        paddingLeft: 45,
-        borderTopLeftRadius: 20,
-        borderBottomLeftRadius: 20,
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
-        backgroundColor: '#d3d3d3',
-    },
-    btnCreate: {
-        height: 40,
-        width: 150,
+        width: 200,
         paddingTop: 5,
         paddingLeft: 35,
         borderTopLeftRadius: 20,
@@ -138,18 +137,14 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 20,
         backgroundColor: '#d3d3d3',
     },
-    txtBtnStart: {
-        fontSize: 25,
-        color: '#5D3FD3'
-    },
-    txtBtnCreate: {
+    txtBtn: {
         fontSize: 20,
         color: '#5D3FD3'
     },
     logo: {
-        width: 100,
-        height: 100,
+        width: 200,
+        height: 200,
     }
 });
 
-export default LoginScreen;
+export default VerificationScreen;
