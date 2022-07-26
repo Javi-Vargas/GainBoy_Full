@@ -3,9 +3,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 
-import ProfileScreen from "./../src/screens/ProfileScreen";
-import WorkoutScreen from "./../src/screens/WorkoutScreen";
-import LogScreen     from "./../src/screens/LogScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import WorkoutScreen from "../screens/WorkoutScreen";
+import LogScreen from "../screens/LogScreen";
+import BeginWorkoutScreen from "../screens/BeginWorkoutScreen";
 
 const Tab = createBottomTabNavigator();
 const Tabs = () => {
@@ -18,19 +19,19 @@ const Tabs = () => {
             tabBarActiveTintColor: "yellow",
 
         }}>
-            <Tab.Screen name="Workout" component={WorkoutScreen} options={{
+            <Tab.Screen name="Workouts" component={WorkoutScreen} options={{
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="barbell-outline" color={color} size={size} />
+                )
+            }} />
+            <Tab.Screen name="Begin" component={BeginWorkoutScreen} options={{
+                tabBarIcon: ({ color, size }) => (
+                    <Ionicons name="play-outline" color={'red'} size={size} />
                 )
             }} />
             <Tab.Screen name="Logs" component={LogScreen} options={{
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="bar-chart-outline" color={color} size={size} />
-                )
-            }} />
-            <Tab.Screen name="Profile" component={ProfileScreen} options={{
-                tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="body-outline" color={color} size={size} />
                 )
             }} />
         </Tab.Navigator>
