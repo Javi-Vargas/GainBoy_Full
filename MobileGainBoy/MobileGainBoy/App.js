@@ -16,12 +16,12 @@ import AddWorkoutScreen     from './src/screens/AddWorkoutScreen';
 const Stack = createNativeStackNavigator();
 
 global.gameBoyPrimaryTxtClr = "#E2E5DE";
-global.userId    = "";
-global.token     = "";
-global.email     = "";
-global.password  = "";
-global.firstName = "";
-global.lastName  = "";
+global.userId      = "";
+global.token       = "";
+global.email       = "";
+global.password    = "";
+global.fullName    = "";
+global.exerciseMap = new Map(); //Key: workout name, Value: workout id
 
 export default function App() {
     return (

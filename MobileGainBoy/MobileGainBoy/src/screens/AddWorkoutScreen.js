@@ -14,13 +14,13 @@ const AddWorkoutScreen = ({ navigation }) => {
         //  Automated test for adding a workout
         if (UNIT_ADD_WORKOUT)
         {
-            obj = {name: 'something', userId: '777', reps: '99', sets: '99', totalWeight: '9000', timeSpent: '99'};
+            obj = {token: global.token, name: 'something', userId: '777', reps: '99', sets: '99', totalWeight: '9000', timeSpent: '99'};
         }
         // --------------------------------->
         else
         {
             //TODO: Fill me up correctly
-            //obj = {name: , userId: global.userId, reps: , sets: , totalWeight: , timeSpent: };
+            //obj = {token: global.token, name: , userId: global.userId, reps: , sets: , totalWeight: , timeSpent: };
         }
         
         var js = JSON.stringify(obj);
@@ -38,6 +38,16 @@ const AddWorkoutScreen = ({ navigation }) => {
         }
         else
         {
+            // Cache the workout id
+            if (UNIT_ADD_WORKOUT)
+            {
+                global.exerciseMap.set('something', res._id);
+            }
+            else
+            {
+                //global.exerciseMap.set('insert variable storing name here', res._id);
+            }
+            
             // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
             // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
             navigation.navigate('Landing');

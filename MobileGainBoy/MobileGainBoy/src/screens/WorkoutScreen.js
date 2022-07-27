@@ -11,26 +11,31 @@ const UNIT_DELETE_WORKOUT   = false;
 const WorkoutScreen = ({ navigation }) => {
     
     const logout = () => {
-        global.email = "";
+        global.userId   = "";
+        global.token    = "";
+        global.email    = "";
         global.password = "";
-        global.userId = "";
-        global.token = "";
+        global.fullName = "";
+        global.exerciseMap.clear();
         navigation.navigate('Login');
     }
 
-    const editWorkout = async () => {
+    const updateWorkout = async () => {
         var obj;
 
         // <----------UNIT TESTING----------> 
         //  Automated test for updating a workout
         if (UNIT_EDIT_WORKOUT)
         {
-            obj = {name: 'somethingTheSequelAgain', userId: '777', reps: '99', sets: '99', totalWeight: '9000', timeSpent: '99'};
+            obj = {_id: global.exerciseMap.get('something'), token: global.token, 
+                   name: 'somethingTheSequel', userId: '777', reps: '99', sets: '99', 
+                   totalWeight: '9000', timeSpent: '99'};
         }
         // --------------------------------->
         else
         {
-            obj = {name: 'something', userId: global.userId, reps: '99', sets: '99', totalWeight: '9000', timeSpent: '99'};
+            //TODO: Need to first check the workout name is a key in the map, then fill accordingly
+            //obj = {_id: , token: global.token, name: , userId: global.userId, reps: , sets: , totalWeight: , timeSpent: };
         }
         
         var js = JSON.stringify(obj);
@@ -62,12 +67,12 @@ const WorkoutScreen = ({ navigation }) => {
         //  Automated test for displaying workouts
         if (UNIT_DISPLAY_WORKOUTS)
         {
-            obj = {userId: '777'};
+            obj = {token: global.token, userId: '777'};
         }
         // --------------------------------->
         else
         {
-            obj = {userId: global.userId};
+            obj = {token: global.token, userId: global.userId};
         }
         
         var js = JSON.stringify(obj);
@@ -99,12 +104,13 @@ const WorkoutScreen = ({ navigation }) => {
         //  Automated test for deleting a workout
         if (UNIT_DELETE_WORKOUT)
         {
-            obj = {name: 'something', userId: '777', reps: '99', sets: '99', totalWeight: '9000', timeSpent: '99'};
+            obj = {token: global.token, _id: global.exerciseMap.get('something')};
         }
         // --------------------------------->
         else
         {
-            obj = {name: 'something', userId: global.userId, reps: '99', sets: '99', totalWeight: '9000', timeSpent: '99'};
+            //TODO: Need to first check the workout name is a key in the map, then fill accordingly
+            //obj = {token: global.token, _id: };
         }
         
         var js = JSON.stringify(obj);
@@ -137,7 +143,7 @@ const WorkoutScreen = ({ navigation }) => {
                     <Text style={{ fontSize: 30, fontWeight: 'bold' }}>Hi FName</Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 40, paddingBottom: 20 }}>
-                    <Button title="Edit" onPress={() => {editWorkout();}} />
+                    <Button title="Edit" onPress={() => {updateWorkout();}} />
                     <TouchableOpacity onPress={() => navigation.navigate('AddWorkout')}>
                         <Ionicons name="add-outline" color="blue" size={30} />
                     </TouchableOpacity>
@@ -163,6 +169,10 @@ const WorkoutScreen = ({ navigation }) => {
                     <TouchableOpacity onPress={() => {deleteWorkout();}}>
                         <Text>Delete something behind your back (Click me when unit testing!)</Text>
                     </TouchableOpacity>
+
+                    <View style={{height: 40}}/>
+
+                    <Button title="Logout" onPress={() => {logout();}} />
                 </View>
             </ScrollView>
         </SafeAreaView >

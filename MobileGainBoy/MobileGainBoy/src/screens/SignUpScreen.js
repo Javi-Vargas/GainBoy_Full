@@ -29,22 +29,23 @@ function SignUpScreen({ navigation }) {
             //  Automated test for making sure password.length is >= 6
             if (UNIT_SECURE_PASSWORD)
             {
-                obj = {email:'no_way_this_would_ever_be_valid@wut.com',password:'five',passwordVerify:'five'};
+                obj = {fullname: 'test', email:'no_way_this_would_ever_be_valid@wut.com',password:'five',passwordVerify:'five'};
             }
             //  Automated test for registering in with existing user
             else if (UNIT_REGISTER)
             {
-                obj = {email:'monkncheese@gmail.com',password:'nuggets',passwordVerify:'nuggets'};
+                obj = {fullname: 'Chris Lee', email:'monkncheese@gmail.com',password:'nuggets',passwordVerify:'nuggets'};
             }
             //  Automated test for passwords not matching
             else if (UNIT_MISMATCH)
             {
-                obj = {email:'no_way_this_would_ever_be_valid@wut.com',password:'nuggets',passwordVerify:'warriors'};
+                obj = {fullname: 'test', email:'no_way_this_would_ever_be_valid@wut.com',password:'nuggets',passwordVerify:'warriors'};
             }
             // --------------------------------->
             else
             {
-                obj = {email:txtEmail.trim(),password:txtPassword.trim(),passwordVerify:txtConfirmPassword.trim()};
+                obj = {fullname: txtUserFullName.trim(), email:txtEmail.trim(),
+                       password:txtPassword.trim(),passwordVerify:txtConfirmPassword.trim()};
             }
 
             var js = JSON.stringify(obj);
@@ -58,8 +59,9 @@ function SignUpScreen({ navigation }) {
             
             if(res.status == 'PENDING')
             {
-                global.email = txtEmail.trim();
-                global.password = txtConfirmPassword.trim();
+                // Need to cache these so the verification page can access them
+                global.email    = txtEmail.trim();
+                global.password = txtPassword.trim();
                 
                 // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
                 // is a function called navigate() that takes the name of another screen, in this case 'Verification', again defined in App.js

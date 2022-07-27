@@ -63,8 +63,9 @@ function LoginScreen({ navigation }) {
             }
             else
             {
-                global.userId   = res.userId;
+                global.userId   = res.userID;
                 global.token    = res.token;
+                global.fullName = res.fullname;
                 global.email    = txtEmail.trim();
                 global.password = txtPassword.trim();
 
