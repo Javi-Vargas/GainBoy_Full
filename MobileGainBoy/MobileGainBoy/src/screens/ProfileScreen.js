@@ -6,9 +6,10 @@ import {
     TouchableOpacity,
     TextInput,
 } from 'react-native';
-import colors from '../../assets/colors'
+import colors from '../assets/colors';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
-function ProfileScreen({ navigation }) {
+function SignUpScreen({ navigation }) {
 
     //The states to check if text input was received
     const [txtUserName, setTextUserName] = useState('');
@@ -44,6 +45,10 @@ function ProfileScreen({ navigation }) {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.black }}>
+            <TouchableOpacity style={{ flexDirection: 'row-reverse', paddingLeft: "10%", paddingTop: "10%", }}>
+                <Text style={{ paddingTop: "1%", paddingRight: '5%', color: colors.red, fontSize: 20, fontWeight: 'bold' }}>Logout</Text>
+                <Ionicons name="exit-outline" color={colors.red} size={30} />
+            </TouchableOpacity>
             <View style={styles.newTitleContainer}>
                 <Text style={styles.bigHeader}>Update Your Personal Info</Text>
             </View>
@@ -113,7 +118,7 @@ const styles = StyleSheet.create({
 
     },
     newTitleContainer: {
-        paddingTop: "10%",
+        paddingTop: "5%",
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -168,10 +173,20 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 20,
         backgroundColor: '#d3d3d3',
     },
+    txtLogin: {
+        fontSize: 25,
+        color: colors.green,
+        transform: [{ rotate: "50deg" }],
+    },
+    txtSignUp: {
+        fontSize: 18,
+        color: colors.green,
+        transform: [{ rotate: "50deg" }],
+    },
     txtBtn: {
         fontSize: 25,
         color: colors.green
     }
 });
 
-export default ProfileScreen;
+export default SignUpScreen;
