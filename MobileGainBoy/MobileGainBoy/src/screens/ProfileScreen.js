@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     TextInput,
 } from 'react-native';
+import colors from '../assets/colors';
 
 function SignUpScreen({ navigation }) {
 
@@ -42,46 +43,50 @@ function SignUpScreen({ navigation }) {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colors.black }}>
             <View style={styles.newTitleContainer}>
                 <Text style={styles.bigHeader}>Update Your Personal Info</Text>
             </View>
 
             <View style={styles.singleFactorContainer}>
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="New Username" placeholderTextColor={global.gameBoyPrimaryTxtClr}
+                    placeholder="Username" placeholderTextColor={'grey'}
                     onChangeText={(value) => setTextUserName(value)} />
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="New Email" placeholderTextColor={global.gameBoyPrimaryTxtClr}
+                    placeholder="Email" placeholderTextColor={'grey'}
                     onChangeText={(value) => setTextEmail(value)} />
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="New Password" placeholderTextColor={global.gameBoyPrimaryTxtClr}
+                    placeholder="New Password" placeholderTextColor={'grey'}
                     onChangeText={(value) => setTextPassword(value)} />
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                    placeholder="Confirm New Password" placeholderTextColor={global.gameBoyPrimaryTxtClr}
+                    placeholder="Confirm New Password" placeholderTextColor={'grey'}
                     onChangeText={(value) => setTextConfirmPassword(value)} />
 
                 <View style={{ height: 50 }} />
             </View>
 
-            <View style={styles.bottomButtons}>
+            <View>
                 {/*The Save changes button.*/}
-                <TouchableOpacity style={styles.btnSave} onPress={() => { checkTextInput(); }}>
+                <View style={{ left: 320 }}>
                     <Text style={styles.txtBtn}>Save</Text>
-                </TouchableOpacity>
-                <View style={{ height: 30 }} />
-                <TouchableOpacity style={styles.btnLogin} onPress={() => navigation.navigate('Login')}>
+                    <TouchableOpacity style={styles.btnSave} onPress={() => { checkTextInput(); }}>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ left: 270 }}>
                     <Text style={styles.txtBtn}>Cancel</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.btnSave} onPress={() => { checkTextInput(); }}>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ height: 30 }} />
             </View>
 
 
@@ -98,7 +103,8 @@ const styles = StyleSheet.create({
     bigHeader: {
         fontWeight: "bold",
         fontSize: 20,
-        top: 10
+        top: 10,
+        color: colors.green
     },
     bottomButtons: {
         paddingLeft: 120,
@@ -119,7 +125,7 @@ const styles = StyleSheet.create({
         height: 50
     },
     txtSingleFactorInfo: {
-        height: 70,
+        height: 55,
         width: 275,
         paddingLeft: 25,
         paddingBottom: 8,
@@ -128,20 +134,28 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 50,
         fontSize: 25,
-        backgroundColor: '#A482FF',
-        color: '#E2E5DE'
+        backgroundColor: colors.white,
+        color: '#E2E5DE',
+        shadowColor: 'black',
+        shadowRadius: 3,
+        shadowOffset: { width: 3, height: 5, },
+        shadowOpacity: 0.5,
     },
     btnSave: {
         flexDirection: 'row',
         height: 40,
-        width: 150,
+        width: 40,
         paddingTop: 3,
         paddingLeft: 40,
         borderTopLeftRadius: 20,
         borderBottomLeftRadius: 20,
         borderTopRightRadius: 20,
         borderBottomRightRadius: 20,
-        backgroundColor: '#d3d3d3',
+        backgroundColor: '#A482FF',
+        shadowColor: 'black',
+        shadowRadius: 1,
+        shadowOffset: { width: -3, height: 3, },
+        shadowOpacity: 0.5,
     },
     btnLogin: {
         height: 40,
@@ -156,7 +170,7 @@ const styles = StyleSheet.create({
     },
     txtBtn: {
         fontSize: 25,
-        color: '#5D3FD3'
+        color: colors.green
     }
 });
 
