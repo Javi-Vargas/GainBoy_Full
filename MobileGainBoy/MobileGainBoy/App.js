@@ -11,11 +11,13 @@ import SignUpScreen         from "./src/screens/SignUpScreen";
 import LandingScreen        from "./src/screens/LandingScreen";
 import ForgotPasswordScreen from "./src/screens/ForgotPasswordScreen";
 import VerificationScreen   from './src/screens/VerificationScreen';
+import AddWorkoutScreen     from './src/screens/AddWorkoutScreen';
 
 const Stack = createNativeStackNavigator();
 
 global.gameBoyPrimaryTxtClr = "#E2E5DE";
-global.userId    = -1;
+global.userId    = "";
+global.token     = "";
 global.email     = "";
 global.password  = "";
 global.firstName = "";
@@ -30,6 +32,7 @@ export default function App() {
                 <Stack.Screen name= "Landing" component={LandingScreen} options={{headerShown: false}}/>
                 <Stack.Screen name= "ForgotPassword" component={ForgotPasswordScreen} options={{headerShown: false}}/>
                 <Stack.Screen name= "Verification" component={VerificationScreen} options={{headerShown: false}}/>
+                <Stack.Screen name= "AddWorkout" component={AddWorkoutScreen} options={{headerShown: false}}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

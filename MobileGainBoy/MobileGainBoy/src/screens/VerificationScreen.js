@@ -43,8 +43,8 @@ function VerificationScreen({ navigation }) {
             if (res.errorMessage == "An account with this email already exists.")
             {
                 // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-                // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
-                navigation.navigate('Landing');
+                // is a function called navigate() that takes the name of another screen, in this case 'Login', again defined in App.js
+                navigation.navigate('Login');
             }
             else
             {

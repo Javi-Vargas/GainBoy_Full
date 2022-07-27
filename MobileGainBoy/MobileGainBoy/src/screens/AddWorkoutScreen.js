@@ -3,11 +3,45 @@ import { View, Text, Button, StyleSheet, ScrollView, SafeAreaView, ImageBackgrou
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 
+// PREPROCESSORS for Unit testing
+const UNIT_ADD_WORKOUT = false;
 
 const AddWorkoutScreen = ({ navigation }) => {
-    const handleSave = () => {
-        alert("Add Workout To DataBase");
-        navigation.navigate('Landing');
+    const handleSave = async () => {
+        var obj;
+
+        // <----------UNIT TESTING----------> 
+        //  Automated test for adding a workout
+        if (UNIT_ADD_WORKOUT)
+        {
+            obj = {name: 'something', userId: '777', reps: '99', sets: '99', totalWeight: '9000', timeSpent: '99'};
+        }
+        // --------------------------------->
+        else
+        {
+            //TODO: Fill me up correctly
+            //obj = {name: , userId: global.userId, reps: , sets: , totalWeight: , timeSpent: };
+        }
+        
+        var js = JSON.stringify(obj);
+
+        const response = await fetch(
+            'https://gainzboy.herokuapp.com/auth/createWorkout',
+            {method:'POST', body:js, headers:{'Content-Type': 'application/json'}}
+        );
+
+        var res = JSON.parse(await response.text());
+        
+        if(res.status != undefined)
+        {
+            alert('Error occurred adding workout');
+        }
+        else
+        {
+            // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
+            // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
+            navigation.navigate('Landing');
+        }
     }
 
     return (
@@ -32,7 +66,6 @@ const AddWorkoutScreen = ({ navigation }) => {
                 <Button style={styles.saveBtn}
                     title="Save"
                     onPress={() => handleSave()}
-                //onPress={() => alert("Add Workout To Database")}
                 />
             </View>
         </SafeAreaView>

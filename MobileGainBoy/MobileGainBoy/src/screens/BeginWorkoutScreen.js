@@ -1,9 +1,8 @@
 import React from "react";
-import { View, Text, Button, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, Text, Button, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { SafeAreaView } from "react-navigation";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const BeginWorkoutScreen = ({ navigation }) => {
     return (

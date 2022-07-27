@@ -30,7 +30,7 @@ function LoginScreen({ navigation }) {
             //  Automated test for logging in with existing user
             if (UNIT_VALID_LOGIN)
             {
-                obj = {email:'monkncheese@gmail.com', password:'nuggets'};
+                obj = {email:'christopher.beltran.cop4331@gmail.com', password:'COP4331'};
             }
             // Automated test for wrong email/password combination
             else if (UNIT_INVALID_LOGIN)
@@ -63,7 +63,9 @@ function LoginScreen({ navigation }) {
             }
             else
             {
-                global.email = txtEmail.trim();
+                global.userId   = res.userId;
+                global.token    = res.token;
+                global.email    = txtEmail.trim();
                 global.password = txtPassword.trim();
 
                 // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
