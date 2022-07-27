@@ -6,6 +6,7 @@ import {
     Image,
     TouchableOpacity
 } from 'react-native';
+import colors from '../../assets/colors'
 
 function VerificationScreen({ navigation }) {
 

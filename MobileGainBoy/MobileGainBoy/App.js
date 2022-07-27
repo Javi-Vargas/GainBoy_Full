@@ -6,6 +6,8 @@ import React from 'react';
 import {NavigationContainer}        from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
+import colors from './assets/colors'
+
 import LoginScreen          from "./src/screens/LoginScreen";
 import SignUpScreen         from "./src/screens/SignUpScreen";
 import LandingScreen        from "./src/screens/LandingScreen";
@@ -15,7 +17,6 @@ import AddWorkoutScreen     from './src/screens/AddWorkoutScreen';
 
 const Stack = createNativeStackNavigator();
 
-global.gameBoyPrimaryTxtClr = "#E2E5DE";
 global.userId      = "";
 global.token       = "";
 global.email       = "";
@@ -27,10 +28,38 @@ export default function App() {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
-                <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}}/>
+                <Stack.Screen name="Login" 
+                              component={LoginScreen} 
+                              options={{
+                                headerShown: true,
+                                headerTitleAlign: 'center',
+                                headerTitleStyle: {color: 'white', fontSize: 25},
+                                headerStyle: {backgroundColor: colors.black}
+                              }}
+                />
+                <Stack.Screen name="Sign Up" 
+                              component={SignUpScreen} 
+                              options={{
+                                headerShown: true,
+                                headerTitleAlign: 'center',
+                                headerTitleStyle: {color: 'white', fontSize: 25},
+                                headerStyle: {backgroundColor: colors.black},
+                                headerTintColor: colors.CJpurple,
+                                headerBackTitleVisible: false
+                              }}
+                />
                 <Stack.Screen name= "Landing" component={LandingScreen} options={{headerShown: false}}/>
-                <Stack.Screen name= "ForgotPassword" component={ForgotPasswordScreen} options={{headerShown: false}}/>
+                <Stack.Screen name="Forgot Password" 
+                              component={ForgotPasswordScreen} 
+                              options={{
+                                headerShown: true,
+                                headerTitleAlign: 'center',
+                                headerTitleStyle: {color: 'white', fontSize: 25},
+                                headerStyle: {backgroundColor: colors.black},
+                                headerTintColor: colors.CJpurple,
+                                headerBackTitleVisible: false
+                              }}
+                />
                 <Stack.Screen name= "Verification" component={VerificationScreen} options={{headerShown: false}}/>
                 <Stack.Screen name= "AddWorkout" component={AddWorkoutScreen} options={{headerShown: false}}/>
             </Stack.Navigator>

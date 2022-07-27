@@ -6,9 +6,9 @@ import {
     TouchableOpacity,
     TextInput,
 } from 'react-native';
-import colors from '../assets/colors';
+import colors from '../../assets/colors'
 
-function SignUpScreen({ navigation }) {
+function ProfileScreen({ navigation }) {
 
     //The states to check if text input was received
     const [txtUserName, setTextUserName] = useState('');
@@ -174,4 +174,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SignUpScreen;
+export default ProfileScreen;

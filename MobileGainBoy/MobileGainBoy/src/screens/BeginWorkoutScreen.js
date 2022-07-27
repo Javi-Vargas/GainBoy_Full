@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text, Button, StyleSheet, StatusBar, TouchableOpaci
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import colors from "../assets/colors";
+import colors from "../../assets/colors";
 
 const BeginWorkoutScreen = ({ navigation }) => {
     return (

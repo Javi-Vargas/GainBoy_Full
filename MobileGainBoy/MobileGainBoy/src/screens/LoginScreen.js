@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { 
-    Keyboard,
     StyleSheet, 
     Text, 
     View, SafeAreaView, 
-    Image, 
     TouchableOpacity,
     TextInput,
-    TouchableWithoutFeedback
 } from 'react-native';
+import colors from '../../assets/colors'
 
 // PREPROCESSORS for Unit testing
 const UNIT_VALID_LOGIN   = false;
@@ -104,127 +102,108 @@ function LoginScreen({ navigation }) {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc' }}>
-            <View style={styles.imgContainer}>
-                <Image style={styles.logo} source={require('./../../assets/gameboy2.0.png')} />
-            </View>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colors.black }}>
+            <View style={{ height: '25%' }} />
 
-            <View style={styles.singleFactorContainer}>
+            {/*Text Entries.*/}
+            <View style={{alignItems: 'center'}}>
                 <TextInput style={styles.txtSingleFactorInfo} 
-                           placeholder="email" placeholderTextColor={global.gameBoyPrimaryTxtClr}
+                           placeholder="email" placeholderTextColor={colors.black}
                            onChangeText={(value) => setTextEmail(value)}/>
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo} 
-                           placeholder="password" placeholderTextColor={global.gameBoyPrimaryTxtClr} secureTextEntry={true}
+                           placeholder="password" placeholderTextColor={colors.black} secureTextEntry={true}
                            onChangeText={(value) => setTextPassword(value)}/>
 
-                <View style={{ height: 30 }} />
+                <View style={{ height: 35 }} />
             </View>
 
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss}>
-                <View style={{ paddingLeft: 125 }}>
-                    {/*The Start/Login button*/}
-                    <TouchableOpacity style={styles.btnStart} onPress={() => { login(); }}>
-                        <Text style={styles.txtBtnStart}>Start</Text>
-                    </TouchableOpacity>
-                </View>
-            </TouchableWithoutFeedback>
-
-            <View style={styles.spaceContainer} />
-
-            <View style={{ paddingLeft: 125 }}>
-                {/*The Create Account button.
-                   The 'SignUp' Stack.Screen is defined in App.js
-                */}
-                <TouchableOpacity style={styles.btnCreate} onPress={() => navigateTo('SignUp')}>
-                    <Text style={styles.txtBtnCreate}>New User</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={{paddingTop: 25, paddingLeft: 145}}>
+            <View style={{alignItems: 'center'}}>
                 {/*Forgot Password Button.
-                   The 'ForgotPassword' Stack.Screen is defined in App.js
+                   The 'Forgot Password' Stack.Screen is defined in App.js
                 */}
-                <TouchableOpacity onPress={() => navigateTo('ForgotPassword')}>
-                    <Text style={{color:'blue'}}>
+                <TouchableOpacity onPress={() => navigateTo('Forgot Password')}>
+                    <Text style={styles.txtForgotPassword}>
                         Forgot Password?
                     </Text>
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.spaceContainer} />
-
             {errorRender()}
+
+            <View style={{ height: 70 }} />
+
+            <View style={{paddingLeft: '25%'}}>
+                <View style={styles.indentContainer}>
+
+                    {/*Sign Up Button.*/}
+                    <TouchableOpacity style={styles.btn} onPress={() => navigateTo('Sign Up')}>
+                        <Text style={styles.txtSignUp}>New User</Text>
+                    </TouchableOpacity>
+
+                    <View style={{ width: 50 }} />
+                    
+                    {/*Login Button.*/}
+                    <TouchableOpacity style={styles.btn} onPress={() => { login(); }}>
+                        <Text style={styles.txtLogin}>Start</Text>
+                    </TouchableOpacity>
+
+                </View>
+            </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    imgContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '45%',
-    },
-    singleFactorContainer: {
-        paddingTop: 10,
-        paddingLeft: 80,
-    },
     spaceContainer: {
-        height: 20
+        height: 50
+    },
+    indentContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 111,
+        width: 275,
+        backgroundColor: colors.blackLite,
+        borderRadius: 100,
+        transform: [{rotate: "-10deg"}],
     },
     txtSingleFactorInfo: {
-        height: 70,
-        width: 250,
+        height: 65,
+        width: 300,
         paddingLeft: 25,
         paddingRight: 25,
         paddingBottom: 8,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 50,
+        borderRadius: 25,
         fontSize: 25,
-        backgroundColor: '#A482FF',
-        color: '#E2E5DE'
+        backgroundColor: colors.white,
+        color: colors.black
     },
-    btnStart: {
-        height: 40,
-        width: 150,
-        paddingTop: 3,
-        paddingLeft: 45,
-        borderTopLeftRadius: 20,
-        borderBottomLeftRadius: 20,
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
-        backgroundColor: '#d3d3d3',
+    btn: {
+        height: 90,
+        width:  90,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 100,
+        backgroundColor: colors.CJpurple
     },
-    btnCreate: {
-        height: 40,
-        width: 150,
-        paddingTop: 5,
-        paddingLeft: 35,
-        borderTopLeftRadius: 20,
-        borderBottomLeftRadius: 20,
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
-        backgroundColor: '#d3d3d3',
-    },
-    txtBtnStart: {
-        fontSize: 25,
-        color: '#5D3FD3'
-    },
-    txtBtnCreate: {
+    txtForgotPassword: {
         fontSize: 20,
-        color: '#5D3FD3'
+        color:colors.green
+    },
+    txtLogin: {
+        fontSize: 25,
+        color:colors.green
+    },
+    txtSignUp: {
+        fontSize: 18,
+        color:colors.green
     },
     txtError: {
         fontSize: 20,
-        color: 'red'
-    },
-    logo: {
-        width: 100,
-        height: 100,
+        color: colors.red
     }
 });
 

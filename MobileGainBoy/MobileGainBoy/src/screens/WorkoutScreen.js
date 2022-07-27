@@ -2,7 +2,8 @@ import React from "react";
 import { View, Text, Button, StyleSheet, ScrollView, SafeAreaView, ImageBackground, TextInput, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
-import colors from '../assets/colors'
+import colors from '../../assets/colors'
+
 // PREPROCESSORS for Unit testing
 const UNIT_EDIT_WORKOUT = false;
 const UNIT_DISPLAY_WORKOUTS = false;

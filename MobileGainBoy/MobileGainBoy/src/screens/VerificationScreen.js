@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     StyleSheet,
     Text,
@@ -6,28 +6,13 @@ import {
     Image,
     TouchableOpacity
 } from 'react-native';
+import colors from '../../assets/colors'
 
 function VerificationScreen({ navigation }) {
 
-    const resend = async () => {
-        try {
-            var obj = { email: global.email, password: global.password, passwordVerify: global.password };
-            var js = JSON.stringify(obj);
-
-            const response = await fetch(
-                'https://gainzboy.herokuapp.com/auth/Register',
-                { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
-            );
-
-            var res = JSON.parse(await response.text());
-
-            alert(res.errorMessage);
-        }
-        catch (e) {
-            alert(e.message);
-        }
-    }
-
+    // The error message state
+    const [txtError, setTextError] = useState('');
+    
     const finish = async () => {
         try {
             var obj = { email: global.email, password: global.password, passwordVerify: global.password };
@@ -48,102 +33,78 @@ function VerificationScreen({ navigation }) {
             }
             else
             {
-                alert(res.errorMessage)
+                setTextError(res.errorMessage);
             }
         }
         catch (e) {
-            alert(e.message);
+            setTextError(e.message);
         }
     }
 
-    return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc' }}>
-            <View style={styles.imgContainer}>
-                <Image style={styles.logo} source={require('./../../assets/gameboy2.0.png')} />
-            </View>
+    // The render of the error message if there was one
+    const errorRender = () => {
+        if (txtError != '')
+            return (<View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <Text style={styles.txtError}>{txtError}</Text>
+                    </View>);
+        else
+            return (<View/>);
+    }
 
+    return (
+        <SafeAreaView style={{ flex: 1, alignItems: 'center', backgroundColor: colors.black }}>
+            <View style={{height: '10%'}}/>
+            
             {/*Verify email text*/}
             <View>
                 <Text style={styles.txtVerifyTitle}>Please verify your email</Text>
 
-                <View style={styles.spaceContainer} />
+                <View style={{height: 20}} />
 
                 <Text style={styles.txtVerifyMessage}>
                     We sent an email to your inbox. Click on the link in the email to complete your signup.
                 </Text>
             </View>
 
-            <View style={{height: 40}} />
+            <View style={{height: 50}} />
 
-            <View style={{paddingLeft: 100}}>
-                {/*The Resend button.*/}
-                <TouchableOpacity style={styles.btn} onPress={() => {resend(); }}>
-                    <Text style={styles.txtBtn}>Resend Email</Text>
-                </TouchableOpacity>
+            <View>
+                <Image style={styles.img} source={require('./../../assets/verificationImage.png')} />
+            </View>
 
-                <View style={{height: 40}} />
+            <View style={{height: 50}} />
 
-                <View style={{paddingLeft: 50}}>
+            <View>
                 <TouchableOpacity onPress={() => {finish();}}>
-                    <Text style={{fontSize: 25, color:'#5D3FD3'}}>
+                    <Text style={{fontSize: 25, color:colors.green, textDecorationLine: 'underline'}}>
                         Continue
                     </Text>
                 </TouchableOpacity>
             </View>
-            </View>
 
-            
+            {errorRender()}
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    verifyButton: {
-        paddingTop: "30%",
-        paddingLeft: "30%",
-        flexDirection: 'column',
-        justifyContent: 'center',
-        color: 'blue',
-        fontSize: 40,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 50,
-    },
-    imgContainer: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '35%'
-    },
     txtVerifyTitle: {
-        paddingLeft: 20,
-        fontSize: 35
+        fontSize: 35,
+        fontWeight: 'bold',
+        color: colors.green
     },
     txtVerifyMessage: {
-        paddingLeft: 25,
-        fontSize: 20
-    },
-    spaceContainer: {
-        height: 20
-    },
-    btn: {
-        height: 40,
-        width: 200,
-        paddingTop: 5,
-        paddingLeft: 35,
-        borderTopLeftRadius: 20,
-        borderBottomLeftRadius: 20,
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
-        backgroundColor: '#d3d3d3',
-    },
-    txtBtn: {
         fontSize: 20,
-        color: '#5D3FD3'
+        color: colors.white
     },
-    logo: {
-        width: 200,
-        height: 200,
+    img: {
+        width:  400,
+        height: 250,
+        opacity: 0.4
+    },
+    txtError: {
+        fontSize: 20,
+        color: colors.red
     }
 });
 

@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     TextInput,
 } from 'react-native';
+import colors from '../../assets/colors'
 
 // PREPROCESSORS for Unit testing
 const UNIT_SECURE_PASSWORD = false;
@@ -100,118 +101,109 @@ function SignUpScreen({ navigation }) {
     }
     
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc', justifyContent: 'center' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colors.black, alignItems: 'center' }}>
             <View style={styles.newTitleContainer}>
-                <Text>Create New Profile</Text>
+                <Text style={{fontSize: 25, color: colors.green}}>Create New Profile</Text>
             </View>
 
-            <View style={styles.singleFactorContainer}>
+            <View style={{ height: 50 }} />
+
+            {/*Text Entries.*/}
+            <View style={{alignItems: 'center'}}>
                 <TextInput style={styles.txtSingleFactorInfo}
-                           placeholder="full name" placeholderTextColor={global.gameBoyPrimaryTxtClr}
+                           placeholder="full name" placeholderTextColor={colors.black}
                            onChangeText={(value) => setTextFullName(value)}/>
 
                 <View style={styles.spaceContainer}/>
 
                 <TextInput style={styles.txtSingleFactorInfo} 
-                           placeholder= "email" placeholderTextColor={global.gameBoyPrimaryTxtClr}
+                           placeholder= "email" placeholderTextColor={colors.black}
                            onChangeText={(value) => setTextEmail(value)}/>
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                           placeholder="password" placeholderTextColor={global.gameBoyPrimaryTxtClr}
+                           placeholder="password" placeholderTextColor={colors.black}
                            onChangeText={(value) => setTextPassword(value)}/>
 
                 <View style={styles.spaceContainer} />
 
                 <TextInput style={styles.txtSingleFactorInfo}
-                           placeholder="confirm password" placeholderTextColor={global.gameBoyPrimaryTxtClr}
+                           placeholder="confirm password" placeholderTextColor={colors.black}
                            onChangeText={(value) => setTextConfirmPassword(value)}/>
 
-                <View style={{ height: 50 }} />
+                <View style={{ height: 25 }} />
             </View>
-
-            <View style={{ paddingLeft: 120 }}>
-                {/*The Create button.*/}
-                <TouchableOpacity style={styles.btnCreate} onPress={() => { register(); }}>
-                    <Text style={styles.txtBtn}>Create</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={{ height: 30 }} />
-
-            <View style={{ paddingLeft: 120 }}>
-                {/*Button for going back to login page.
-                   The 'Login' Stack.Screen is defined in App.js
-                */}
-                <TouchableOpacity style={styles.btnLogin} onPress={() => navigateTo('Login')}>
-                    <Text style={styles.txtBtn}>Login</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={{height: 30}} />
 
             {errorRender()}
+
+            <View style={{ height: 45 }} />
+
+            <View style={{paddingLeft: '25%'}}>
+                <View style={styles.indentContainer}>
+
+                    {/*Back Button.*/}
+                    <TouchableOpacity style={styles.btn} onPress={() => navigateTo('Login')}>
+                        <Text style={styles.txtBtnLabel}>Back</Text>
+                    </TouchableOpacity>
+
+                    <View style={{ width: 50 }} />
+                    
+                    {/*Create Button.*/}
+                    <TouchableOpacity style={styles.btn} onPress={() => { register(); }}>
+                        <Text style={styles.txtBtnLabel}>Create</Text>
+                    </TouchableOpacity>
+
+                </View>
+            </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     newTitleContainer: {
-        paddingTop: "10%",
-        justifyContent: 'center',
+        paddingTop: '10%',
         alignItems: 'center'
     },
-    singleFactorContainer: {
-        paddingTop: 75,
-        paddingLeft: 70,
-    },
     spaceContainer: {
-        height: 50
+        height: 40
+    },
+    indentContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 100,
+        width: 275,
+        backgroundColor: colors.blackLite,
+        borderRadius: 100,
+        transform: [{rotate: "-10deg"}],
     },
     txtSingleFactorInfo: {
-        height: 70,
-        width: 275,
+        height: 65,
+        width: 300,
         paddingLeft: 25,
         paddingRight: 25,
         paddingBottom: 8,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 50,
+        borderRadius: 25,
         fontSize: 25,
-        backgroundColor: '#A482FF',
-        color: '#E2E5DE'
+        backgroundColor: colors.white,
+        color: colors.black
     },
-    btnCreate: {
-        height: 40,
-        width: 150,
-        paddingTop: 3,
-        paddingLeft: 40,
-        borderTopLeftRadius: 20,
-        borderBottomLeftRadius: 20,
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
-        backgroundColor: '#d3d3d3',
+    btn: {
+        height: 85,
+        width:  85,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 100,
+        backgroundColor: colors.CJpurple
     },
-    btnLogin: {
-        height: 40,
-        width: 150,
-        paddingTop: 3,
-        paddingLeft: 45,
-        borderTopLeftRadius: 20,
-        borderBottomLeftRadius: 20,
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
-        backgroundColor: '#d3d3d3',
-    },
-    txtBtn: {
-        fontSize: 25,
-        color: '#5D3FD3'
+    txtBtnLabel: {
+        fontSize: 22,
+        color:colors.green
     },
     txtError: {
         fontSize: 20,
-        color: 'red'
+        color: colors.red
     }
 });
 

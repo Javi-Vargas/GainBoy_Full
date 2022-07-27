@@ -7,5 +7,4 @@ export default {
     purple: "#D024FF",
     CJpurple: '#A482FF',
     green: "#8DF77D",
-
 }

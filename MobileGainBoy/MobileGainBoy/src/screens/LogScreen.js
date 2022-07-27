@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, StyleSheet, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
+import { SafeAreaView, View, Text, Button, StyleSheet, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
 
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { SafeAreaView } from "react-navigation";
-import colors from "../assets/colors";
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import colors from '../../assets/colors'
 
 
 const LogScreen = ({ navigation }) => {
