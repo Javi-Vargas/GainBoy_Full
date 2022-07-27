@@ -21,6 +21,18 @@ function LoginScreen({ navigation }) {
     const [txtEmail,    setTextEmail]    = useState('');
     const [txtPassword, setTextPassword] = useState('');
 
+    // The error message state
+    const [txtError, setTextError] = useState('');
+
+    // Use this to navigate to pages so that the error message always clears
+    const navigateTo = (screen) => {
+        setTextError('');
+        
+        // navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
+        // is a function called navigate() that takes the name of another screen
+        navigation.navigate(screen);
+    }
+    
     const login = async () => {
         try {
 
@@ -59,7 +71,7 @@ function LoginScreen({ navigation }) {
             
             if(res.errorMessage != undefined)
             {
-                alert(res.errorMessage);
+                setTextError(res.errorMessage);
             }
             else
             {
@@ -69,15 +81,26 @@ function LoginScreen({ navigation }) {
                 global.email    = txtEmail.trim();
                 global.password = txtPassword.trim();
 
-                // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-                // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
-                navigation.navigate('Landing');
+                setTextError('');
+
+                // The 'Landing' screen is defined in App.js
+                navigateTo('Landing');
             }
         }
         catch(e) 
         {
-            alert(e.message);
+            setTextError(e.message);
         }
+    }
+
+    // The render of the error message if there was one
+    const errorRender = () => {
+        if (txtError != '')
+            return (<View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <Text style={styles.txtError}>{txtError}</Text>
+                    </View>);
+        else
+            return (<View/>);
     }
 
     return (
@@ -115,18 +138,25 @@ function LoginScreen({ navigation }) {
                 {/*The Create Account button.
                    The 'SignUp' Stack.Screen is defined in App.js
                 */}
-                <TouchableOpacity style={styles.btnCreate} onPress={() => navigation.navigate('SignUp')}>
+                <TouchableOpacity style={styles.btnCreate} onPress={() => navigateTo('SignUp')}>
                     <Text style={styles.txtBtnCreate}>New User</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={{paddingTop: 25, paddingLeft: 145}}>
-                <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+                {/*Forgot Password Button.
+                   The 'ForgotPassword' Stack.Screen is defined in App.js
+                */}
+                <TouchableOpacity onPress={() => navigateTo('ForgotPassword')}>
                     <Text style={{color:'blue'}}>
                         Forgot Password?
                     </Text>
                 </TouchableOpacity>
             </View>
+
+            <View style={styles.spaceContainer} />
+
+            {errorRender()}
         </SafeAreaView>
     );
 }
@@ -187,6 +217,10 @@ const styles = StyleSheet.create({
     txtBtnCreate: {
         fontSize: 20,
         color: '#5D3FD3'
+    },
+    txtError: {
+        fontSize: 20,
+        color: 'red'
     },
     logo: {
         width: 100,

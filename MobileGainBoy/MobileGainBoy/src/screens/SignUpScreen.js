@@ -20,6 +20,18 @@ function SignUpScreen({ navigation }) {
     const [txtPassword,        setTextPassword]        = useState('');
     const [txtConfirmPassword, setTextConfirmPassword] = useState('');
 
+    // The error message state
+    const [txtError, setTextError] = useState('');
+
+    // Use this to navigate to pages so that the error message always clears
+    const navigateTo = (screen) => {
+        setTextError('');
+        
+        // navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
+        // is a function called navigate() that takes the name of another screen
+        navigation.navigate(screen);
+    }
+
     const register = async () => {
         try {
 
@@ -63,19 +75,28 @@ function SignUpScreen({ navigation }) {
                 global.email    = txtEmail.trim();
                 global.password = txtPassword.trim();
                 
-                // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-                // is a function called navigate() that takes the name of another screen, in this case 'Verification', again defined in App.js
-                navigation.navigate('Verification');
+                // The 'Verification' screen is defined in App.js
+                navigateTo('Verification');
             }
             else
             {
-                alert(res.errorMessage);
+                setTextError(res.errorMessage);
             }
         }
         catch(e) 
         {
-            alert(e.message);
+            setTextError(e.message);
         }
+    }
+
+    // The render of the error message if there was one
+    const errorRender = () => {
+        if (txtError != '')
+            return (<View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <Text style={styles.txtError}>{txtError}</Text>
+                    </View>);
+        else
+            return (<View/>);
     }
     
     return (
@@ -123,10 +144,14 @@ function SignUpScreen({ navigation }) {
                 {/*Button for going back to login page.
                    The 'Login' Stack.Screen is defined in App.js
                 */}
-                <TouchableOpacity style={styles.btnLogin} onPress={() => navigation.navigate('Login')}>
+                <TouchableOpacity style={styles.btnLogin} onPress={() => navigateTo('Login')}>
                     <Text style={styles.txtBtn}>Login</Text>
                 </TouchableOpacity>
             </View>
+
+            <View style={{height: 30}} />
+
+            {errorRender()}
         </SafeAreaView>
     );
 }
@@ -183,6 +208,10 @@ const styles = StyleSheet.create({
     txtBtn: {
         fontSize: 25,
         color: '#5D3FD3'
+    },
+    txtError: {
+        fontSize: 20,
+        color: 'red'
     }
 });
 
