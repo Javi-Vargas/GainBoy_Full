@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
     StyleSheet,
     Text,
@@ -7,7 +7,7 @@ import {
     TouchableOpacity,
     TextInput,
 } from 'react-native';
-import colors from '../../assets/colors'
+import colors from '../assets/colors'
 
 function ForgotPasswordScreen({ navigation }) {
 
@@ -27,12 +27,10 @@ function ForgotPasswordScreen({ navigation }) {
             //TODO: remove when API is made
             let preprocessor = true;
 
-            if (preprocessor)
-            {
+            if (preprocessor) {
                 setPasswordReset(preprocessor);
             }
-            else
-            {
+            else {
                 setTextError('Error occurred');
             }
         }
@@ -43,49 +41,52 @@ function ForgotPasswordScreen({ navigation }) {
 
     // The render of the error message if there was one
     const errorRender = () => {
-        if (txtError != '')
-            return (<View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Text style={styles.txtError}>{txtError}</Text>
-                    </View>);
+        if (setTextEmail == '')
+            return (<View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={styles.txtError}>{txtError}</Text>
+            </View>);
         else
-            return (<View/>);
+            return (<View />);
     }
 
     // The render to continue back to login page
     const continueRender = () => {
         if (passwordReset)
             return (<View>
-                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                            <Text style={{ fontSize: 25, color: colors.green, textDecorationLine: 'underline' }}>
-                                Continue
-                            </Text>
-                        </TouchableOpacity>
-                    </View>);
+                <TouchableOpacity style={{ top: '60%' }} onPress={() => navigation.navigate('Login')}>
+                    <Text style={styles.txtVerifyMessage}>
+                        We sent an email to your inbox. Click on the link in the email to complete your signup.
+                    </Text>
+                    <Text style={{ top: '50%', left: '38%', fontSize: 25, color: colors.green, textDecorationLine: 'underline' }}>
+                        Continue
+                    </Text>
+                </TouchableOpacity>
+            </View>);
         else
-            return (<View/>);
+            return (<View />);
     }
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={{ height: '15%' }} />
-            
+
             <Text style={styles.txtTitle}>Please verify your email</Text>
 
             <View style={{ height: 75 }} />
 
-            <View style={{width: 375}}>
-                <Text style={styles.txtVerifyMessage}>
+            <View style={{ width: 375 }}>
+                {/* <Text style={styles.txtVerifyMessage}>
                     We sent an email to your inbox. Click on the link in the email to complete your signup.
-                </Text>
+                </Text> */}
             </View>
 
             <View style={{ height: 50 }} />
 
             {/*Verify email text*/}
             <View>
-                <TextInput style={styles.txtSingleFactorInfo} 
-                           placeholder="email" placeholderTextColor={colors.black}
-                           onChangeText={(value) => setTextEmail(value)}/>
+                <TextInput style={styles.txtSingleFactorInfo}
+                    placeholder="email" placeholderTextColor={colors.black}
+                    onChangeText={(value) => setTextEmail(value)} />
             </View>
 
             <View style={{ height: 40 }} />
@@ -119,30 +120,44 @@ const styles = StyleSheet.create({
         paddingRight: 25,
         paddingBottom: 8,
         borderRadius: 25,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 50,
         fontSize: 25,
         backgroundColor: colors.white,
-        color: colors.black
+        color: colors.black,
+        shadowColor: 'black',
+        shadowRadius: 3,
+        shadowOffset: { width: 3, height: 10, },
+        shadowOpacity: 0.5,
     },
     txtTitle: {
         fontSize: 25,
         fontWeight: 'bold',
-        color:colors.green
+        color: colors.green
     },
     txtVerifyMessage: {
         fontSize: 18,
-        color:colors.white
+        color: colors.white
     },
     txtBtnLabel: {
-        fontSize: 15,
-        color:colors.green
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: colors.green,
+
     },
     btn: {
-        height: 120,
-        width:  120,
+        height: 90,
+        width: 150,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 100,
-        backgroundColor: colors.CJpurple
+        backgroundColor: colors.CJpurple,
+        shadowColor: 'black',
+        shadowRadius: 3,
+        shadowOffset: { width: 3, height: 10, },
+        shadowOpacity: 0.5,
     },
     txtError: {
         fontSize: 20,
