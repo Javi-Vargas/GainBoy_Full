@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     TextInput,
 } from 'react-native';
-import colors from '../assets/colors';
+import colors from '../../assets/colors'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 function SignUpScreen({ navigation }) {

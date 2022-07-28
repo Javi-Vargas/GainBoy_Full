@@ -1,149 +1,153 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     StyleSheet,
     Text,
     View, SafeAreaView,
     Image,
-    TouchableOpacity
+    TouchableOpacity,
+    TextInput,
 } from 'react-native';
 import colors from '../../assets/colors'
 
-function VerificationScreen({ navigation }) {
+function ForgotPasswordScreen({ navigation }) {
 
-    const resend = async () => {
+    //The states to check if text input was received
+    const [txtEmail, setTextEmail] = useState('');
+
+    // The error message state
+    const [txtError, setTextError] = useState('');
+
+    // The password reset state
+    const [passwordReset, setPasswordReset] = useState(false);
+
+    const reset = async () => {
         try {
-            var obj = { email: global.email, password: global.password, passwordVerify: global.password };
-            var js = JSON.stringify(obj);
+            //NEED RESET_PASSWORD_API
 
-            const response = await fetch(
-                'https://gainzboy.herokuapp.com/auth/Register',
-                { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
-            );
+            //TODO: remove when API is made
+            let preprocessor = true;
 
-            var res = JSON.parse(await response.text());
-
-            alert(res.errorMessage);
+            if (preprocessor)
+            {
+                setPasswordReset(preprocessor);
+            }
+            else
+            {
+                setTextError('Error occurred');
+            }
         }
         catch (e) {
             alert(e.message);
         }
     }
 
-    const finish = async () => {
-        try {
-            var obj = { email: global.email, password: global.password, passwordVerify: global.password };
-            var js = JSON.stringify(obj);
+    // The render of the error message if there was one
+    const errorRender = () => {
+        if (txtError != '')
+            return (<View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <Text style={styles.txtError}>{txtError}</Text>
+                    </View>);
+        else
+            return (<View/>);
+    }
 
-            const response = await fetch(
-                'https://gainzboy.herokuapp.com/auth/Register',
-                { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
-            );
-
-            var res = JSON.parse(await response.text());
-
-            if (res.errorMessage == "An account with this email already exists.") {
-                // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-                // is a function called navigate() that takes the name of another screen, in this case 'Login', again defined in App.js
-                navigation.navigate('Login');
-            }
-            else {
-                alert(res.errorMessage)
-            }
-        }
-        catch (e) {
-            alert(e.message);
-        }
+    // The render to continue back to login page
+    const continueRender = () => {
+        if (passwordReset)
+            return (<View>
+                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                            <Text style={{ fontSize: 25, color: colors.green, textDecorationLine: 'underline' }}>
+                                Continue
+                            </Text>
+                        </TouchableOpacity>
+                    </View>);
+        else
+            return (<View/>);
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#8fcbbc' }}>
-            <View style={styles.imgContainer}>
-                <Image style={styles.logo} source={require('./../../assets/gameboy2.0.png')} />
-            </View>
+        <SafeAreaView style={styles.container}>
+            <View style={{ height: '15%' }} />
+            
+            <Text style={styles.txtTitle}>Please verify your email</Text>
 
-            {/*Verify email text*/}
-            <View>
-                <Text style={styles.txtVerifyTitle}>Please verify your email</Text>
+            <View style={{ height: 75 }} />
 
-                <View style={styles.spaceContainer} />
-
+            <View style={{width: 375}}>
                 <Text style={styles.txtVerifyMessage}>
                     We sent an email to your inbox. Click on the link in the email to complete your signup.
                 </Text>
             </View>
 
+            <View style={{ height: 50 }} />
+
+            {/*Verify email text*/}
+            <View>
+                <TextInput style={styles.txtSingleFactorInfo} 
+                           placeholder="email" placeholderTextColor={colors.black}
+                           onChangeText={(value) => setTextEmail(value)}/>
+            </View>
+
             <View style={{ height: 40 }} />
 
-            <View style={{ paddingLeft: 100 }}>
-                {/*The Resend button.*/}
-                <TouchableOpacity style={styles.btn} onPress={() => { resend(); }}>
-                    <Text style={styles.txtBtn}>Resend Email</Text>
+            <View style={{ alignItems: 'center' }}>
+                {/*The Reset button.*/}
+                <TouchableOpacity style={styles.btn} onPress={() => { reset(); }}>
+                    <Text style={styles.txtBtnLabel}>Reset Password</Text>
                 </TouchableOpacity>
 
                 <View style={{ height: 40 }} />
 
-                <View style={{ paddingLeft: 50 }}>
-                    <TouchableOpacity onPress={() => { finish(); }}>
-                        <Text style={{ fontSize: 25, color: '#5D3FD3' }}>
-                            Continue
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                {errorRender()}
+
+                {continueRender()}
             </View>
-
-
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    verifyButton: {
-        paddingTop: "30%",
-        paddingLeft: "30%",
-        flexDirection: 'column',
-        justifyContent: 'center',
-        color: 'blue',
-        fontSize: 40,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 50,
-    },
-    imgContainer: {
-        justifyContent: 'center',
+    container: {
+        flex: 1,
         alignItems: 'center',
-        height: '35%'
+        backgroundColor: colors.black
     },
-    txtVerifyTitle: {
-        paddingLeft: 20,
-        fontSize: 35
+    txtSingleFactorInfo: {
+        height: 65,
+        width: 300,
+        paddingLeft: 25,
+        paddingRight: 25,
+        paddingBottom: 8,
+        borderRadius: 25,
+        fontSize: 25,
+        backgroundColor: colors.white,
+        color: colors.black
+    },
+    txtTitle: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        color:colors.green
     },
     txtVerifyMessage: {
-        paddingLeft: 25,
-        fontSize: 20
+        fontSize: 18,
+        color:colors.white
     },
-    spaceContainer: {
-        height: 20
+    txtBtnLabel: {
+        fontSize: 15,
+        color:colors.green
     },
     btn: {
-        height: 40,
-        width: 200,
-        paddingTop: 5,
-        paddingLeft: 35,
-        borderTopLeftRadius: 20,
-        borderBottomLeftRadius: 20,
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
-        backgroundColor: '#d3d3d3',
+        height: 120,
+        width:  120,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 100,
+        backgroundColor: colors.CJpurple
     },
-    txtBtn: {
+    txtError: {
         fontSize: 20,
-        color: '#5D3FD3'
-    },
-    logo: {
-        width: 200,
-        height: 200,
+        color: colors.red
     }
 });
 
-export default VerificationScreen;
+export default ForgotPasswordScreen;
