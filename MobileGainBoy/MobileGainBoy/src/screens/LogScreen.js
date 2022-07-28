@@ -43,7 +43,7 @@ const LogScreen = ({ navigation }) => {
                     <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 20, color: colors.green }}>{date}</Text>
                     <View style={{ flexDirection: 'column', justifyContent: 'space-evenly', margin: 10 }}>
                         {data.map(item => (
-                            <Card data={item} />
+                            <Card key={item.name} data={item} />
                         ))}
                     </View>
                 </ScrollView>
