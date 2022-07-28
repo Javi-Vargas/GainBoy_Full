@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
-import { 
-    StyleSheet, 
-    Text, 
-    View, SafeAreaView, 
+import {
+    StyleSheet,
+    Text,
+    View, SafeAreaView,
     TouchableOpacity,
     TextInput,
 } from 'react-native';
-import colors from '../../assets/colors'
+import colors from '../assets/colors'
 
 // PREPROCESSORS for Unit testing
-const UNIT_VALID_LOGIN   = false;
+const UNIT_VALID_LOGIN = true;
 const UNIT_INVALID_LOGIN = false;
-const UNIT_NOT_VERIFIED  = false;
+const UNIT_NOT_VERIFIED = false;
 
 function LoginScreen({ navigation }) {
 
     //The states to check if text input was received
-    const [txtEmail,    setTextEmail]    = useState('');
+    const [txtEmail, setTextEmail] = useState('');
     const [txtPassword, setTextPassword] = useState('');
 
     // The error message state
@@ -25,12 +25,12 @@ function LoginScreen({ navigation }) {
     // Use this to navigate to pages so that the error message always clears
     const navigateTo = (screen) => {
         setTextError('');
-        
+
         // navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
         // is a function called navigate() that takes the name of another screen
         navigation.navigate(screen);
     }
-    
+
     const login = async () => {
         try {
 
@@ -38,45 +38,39 @@ function LoginScreen({ navigation }) {
 
             // <----------UNIT TESTING----------> 
             //  Automated test for logging in with existing user
-            if (UNIT_VALID_LOGIN)
-            {
-                obj = {email:'christopher.beltran.cop4331@gmail.com', password:'COP4331'};
+            if (UNIT_VALID_LOGIN) {
+                obj = { email: 'christopher.beltran.cop4331@gmail.com', password: 'COP4331' };
             }
             // Automated test for wrong email/password combination
-            else if (UNIT_INVALID_LOGIN)
-            {
-                obj = {email:'no_way_this_would_ever_be_valid@wut.com', password:'SUPER_STRONG_PASSWORD'};
+            else if (UNIT_INVALID_LOGIN) {
+                obj = { email: 'no_way_this_would_ever_be_valid@wut.com', password: 'SUPER_STRONG_PASSWORD' };
             }
             // Automated test for wrong email/password combination
-            else if (UNIT_NOT_VERIFIED)
-            {
-                obj = {email:'do_not_verify_cop4331@gmail.com', password:'COP4331'};
+            else if (UNIT_NOT_VERIFIED) {
+                obj = { email: 'do_not_verify_cop4331@gmail.com', password: 'COP4331' };
             }
             // --------------------------------->
-            else
-            {
-                obj = {email:txtEmail.trim(), password:txtPassword.trim()};
+            else {
+                obj = { email: txtEmail.trim(), password: txtPassword.trim() };
             }
 
             var js = JSON.stringify(obj);
 
             const response = await fetch(
                 'https://gainzboy.herokuapp.com/auth/login',
-                {method:'POST', body:js, headers:{'Content-Type': 'application/json'}}
+                { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
             );
 
             var res = JSON.parse(await response.text());
-            
-            if(res.errorMessage != undefined)
-            {
+
+            if (res.errorMessage != undefined) {
                 setTextError(res.errorMessage);
             }
-            else
-            {
-                global.userId   = res.userID;
-                global.token    = res.token;
+            else {
+                global.userId = res.userID;
+                global.token = res.token;
                 global.fullName = res.fullname;
-                global.email    = txtEmail.trim();
+                global.email = txtEmail.trim();
                 global.password = txtPassword.trim();
 
                 setTextError('');
@@ -85,8 +79,7 @@ function LoginScreen({ navigation }) {
                 navigateTo('Landing');
             }
         }
-        catch(e) 
-        {
+        catch (e) {
             setTextError(e.message);
         }
     }
@@ -94,11 +87,11 @@ function LoginScreen({ navigation }) {
     // The render of the error message if there was one
     const errorRender = () => {
         if (txtError != '')
-            return (<View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Text style={styles.txtError}>{txtError}</Text>
-                    </View>);
+            return (<View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={styles.txtError}>{txtError}</Text>
+            </View>);
         else
-            return (<View/>);
+            return (<View />);
     }
 
     return (
@@ -106,21 +99,21 @@ function LoginScreen({ navigation }) {
             <View style={{ height: '25%' }} />
 
             {/*Text Entries.*/}
-            <View style={{alignItems: 'center'}}>
-                <TextInput style={styles.txtSingleFactorInfo} 
-                           placeholder="email" placeholderTextColor={colors.black}
-                           onChangeText={(value) => setTextEmail(value)}/>
+            <View style={{ alignItems: 'center' }}>
+                <TextInput style={styles.txtSingleFactorInfo}
+                    placeholder="email" placeholderTextColor={colors.black}
+                    onChangeText={(value) => setTextEmail(value)} />
 
                 <View style={styles.spaceContainer} />
 
-                <TextInput style={styles.txtSingleFactorInfo} 
-                           placeholder="password" placeholderTextColor={colors.black} secureTextEntry={true}
-                           onChangeText={(value) => setTextPassword(value)}/>
+                <TextInput style={styles.txtSingleFactorInfo}
+                    placeholder="password" placeholderTextColor={colors.black} secureTextEntry={true}
+                    onChangeText={(value) => setTextPassword(value)} />
 
                 <View style={{ height: 35 }} />
             </View>
 
-            <View style={{alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
                 {/*Forgot Password Button.
                    The 'Forgot Password' Stack.Screen is defined in App.js
                 */}
@@ -135,7 +128,7 @@ function LoginScreen({ navigation }) {
 
             <View style={{ height: 70 }} />
 
-            <View style={{paddingLeft: '25%'}}>
+            <View style={{ paddingLeft: '50%', paddingTop: '20%' }}>
                 <View style={styles.indentContainer}>
 
                     {/*Sign Up Button.*/}
@@ -144,7 +137,7 @@ function LoginScreen({ navigation }) {
                     </TouchableOpacity>
 
                     <View style={{ width: 50 }} />
-                    
+
                     {/*Login Button.*/}
                     <TouchableOpacity style={styles.btn} onPress={() => { login(); }}>
                         <Text style={styles.txtLogin}>Start</Text>
@@ -164,11 +157,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        height: 111,
-        width: 275,
+        height: 90,
+        width: 220,
         backgroundColor: colors.blackLite,
         borderRadius: 100,
-        transform: [{rotate: "-10deg"}],
+        transform: [{ rotate: "-50deg" }],
     },
     txtSingleFactorInfo: {
         height: 65,
@@ -176,30 +169,43 @@ const styles = StyleSheet.create({
         paddingLeft: 25,
         paddingRight: 25,
         paddingBottom: 8,
-        borderRadius: 25,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 50,
         fontSize: 25,
         backgroundColor: colors.white,
-        color: colors.black
+        color: colors.black,
+        shadowColor: 'black',
+        shadowRadius: 3,
+        shadowOffset: { width: 3, height: 10, },
+        shadowOpacity: 0.5,
     },
     btn: {
-        height: 90,
-        width:  90,
+        height: 60,
+        width: 60,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 100,
-        backgroundColor: colors.CJpurple
+        backgroundColor: colors.CJpurple,
+        shadowColor: 'black',
+        shadowRadius: 3,
+        shadowOffset: { width: 3, height: 5, },
+        shadowOpacity: 0.5,
     },
     txtForgotPassword: {
         fontSize: 20,
-        color:colors.green
+        color: colors.green
     },
     txtLogin: {
         fontSize: 25,
-        color:colors.green
+        color: colors.green,
+        transform: [{ rotate: "50deg" }],
     },
     txtSignUp: {
         fontSize: 18,
-        color:colors.green
+        color: colors.green,
+        transform: [{ rotate: "50deg" }],
     },
     txtError: {
         fontSize: 20,
