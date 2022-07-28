@@ -22,6 +22,7 @@ global.token       = "";
 global.email       = "";
 global.password    = "";
 global.fullName    = "";
+global.exercises   = []; 
 global.exerciseMap = new Map(); //Key: workout name, Value: workout id
 
 export default function App() {

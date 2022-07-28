@@ -1,35 +1,85 @@
-import React from "react";
-import { View, Text, Button, StyleSheet, ScrollView, SafeAreaView, ImageBackground, TextInput, TouchableOpacity } from 'react-native';
+import React, {useState} from "react";
+import { View, 
+         Text, 
+         Button, 
+         StyleSheet, 
+         ScrollView, 
+         SafeAreaView, 
+         Alert, 
+         TextInput,
+         TouchableOpacity } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import colors from '../../assets/colors'
 
 // PREPROCESSORS for Unit testing
-const UNIT_EDIT_WORKOUT = false;
-const UNIT_DISPLAY_WORKOUTS = false;
-const UNIT_DELETE_WORKOUT = false;
+const UNIT_UPDATE_WORKOUT   = true;
+const UNIT_DISPLAY_WORKOUTS = true;
+const UNIT_DELETE_WORKOUT   = true;
+
+let workoutCards = new Array();
 
 const WorkoutScreen = ({ navigation }) => {
 
+    // The error message state
+    const [txtError, setTextError] = useState('');
+
+    const [renderUpdate, setRenderUpdate] = useState(false);
+
+    const Card = ({ data }) => {
+        return (
+            <View style={styles.cardContainer}>
+                <View style={styles.cardDataContainer}>
+                    <Text style={styles.lblData}> Workout: {data.name} </Text>
+                    <Text style={styles.lblData}> Reps: {data.reps}    </Text>
+                    <Text style={styles.lblData}> Sets: {data.sets}    </Text>
+                    <Text style={styles.lblData}> Total Weight (lb): {data.totalWeight}</Text>
+                    <Text style={styles.lblData}> Time Spent: {data.timeSpent} </Text>
+                </View>
+                
+                {/*Edit and Delete icons*/}
+                <View style={{ paddingTop: 20, flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                    <TouchableOpacity onPress={() => alert('Editing')}>
+                        <Feather name='edit' size={25} color={colors.CJpurple} style={{ marginRight: 5 }} />
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity onPress={() => {trash(data.name);}}>
+                        <Ionicons name="trash-outline" color={colors.red} size={25} />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
+    }
+    
     const logout = () => {
+        setTextError('');
         global.email = "";
         global.password = "";
         global.userId = "";
         global.token = "";
+        global.fullName = "";
+        global.exercises = [];
+        global.exerciseMap.clear();
+        workoutCards = [];
         navigation.navigate('Login');
     }
-
-    const editWorkout = async () => {
+    
+    const updateWorkout = async (workoutName) => {
         var obj;
 
         // <----------UNIT TESTING----------> 
         //  Automated test for updating a workout
-        if (UNIT_EDIT_WORKOUT) {
-            obj = { name: 'somethingTheSequelAgain', userId: '777', reps: '99', sets: '99', totalWeight: '9000', timeSpent: '99' };
+        if (UNIT_UPDATE_WORKOUT) {
+            obj = {_id: global.exerciseMap.get('something'), token: global.token, 
+                   name: 'somethingTheSequel', userId: '777', reps: '99', sets: '99', 
+                   totalWeight: '9000', timeSpent: '99'};
         }
         // --------------------------------->
         else {
-            obj = { name: 'something', userId: global.userId, reps: '99', sets: '99', totalWeight: '9000', timeSpent: '99' };
+            //TODO: Need to first check the workout name is a key in the map, then fill accordingly
+            //obj = {_id: global.exerciseMap.get('something'), token: global.token, 
+            //       name: , userId: global.userId, reps: , sets: , totalWeight: , timeSpent: };
         }
 
         var js = JSON.stringify(obj);
@@ -42,13 +92,11 @@ const WorkoutScreen = ({ navigation }) => {
         var res = JSON.parse(await response.text());
 
         if (res.message == undefined) {
-            alert('Error occurred updating workout');
+            setTextError('Error occurred updating workout');
         }
         else {
-            alert(res.message);
-            // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-            // is a function called navigate() that takes the name of another screen, in this case 'Landing', again defined in App.js
-            navigation.navigate('Landing');
+            // Toggle render update to force a render
+            setRenderUpdate(!renderUpdate);
         }
     }
 
@@ -58,11 +106,11 @@ const WorkoutScreen = ({ navigation }) => {
         // <----------UNIT TESTING----------> 
         //  Automated test for displaying workouts
         if (UNIT_DISPLAY_WORKOUTS) {
-            obj = { userId: '777' };
+            obj = {token: global.token, userId: '777'};
         }
         // --------------------------------->
         else {
-            obj = { userId: global.userId };
+            obj = {token: global.token, userId: global.userId};
         }
 
         var js = JSON.stringify(obj);
@@ -72,29 +120,30 @@ const WorkoutScreen = ({ navigation }) => {
             { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
         );
 
-        var res = JSON.parse(await response.text());
+        let res = JSON.parse(await response.text());
 
         if (res.status != undefined) {
-            alert('Could not display your workouts');
+            setTextError('Could not display your workouts');
         }
         else {
-            for (let i = 0; i < res.results.length; i++) {
-                alert(res.results[i].name);
-            }
+            global.exercises = res.results;
+
+            // Toggle render update to force a render
+            setRenderUpdate(!renderUpdate);
         }
     }
 
-    const deleteWorkout = async () => {
+    const deleteWorkout = async (workoutName) => {
         var obj;
 
         // <----------UNIT TESTING----------> 
         //  Automated test for deleting a workout
         if (UNIT_DELETE_WORKOUT) {
-            obj = { name: 'something', userId: '777', reps: '99', sets: '99', totalWeight: '9000', timeSpent: '99' };
+            obj = {token: global.token, _id: global.exerciseMap.get('something')};
         }
         // --------------------------------->
         else {
-            obj = { name: 'something', userId: global.userId, reps: '99', sets: '99', totalWeight: '9000', timeSpent: '99' };
+            obj = {token: global.token, _id: global.exerciseMap.get(workoutName)};
         }
 
         var js = JSON.stringify(obj);
@@ -107,90 +156,159 @@ const WorkoutScreen = ({ navigation }) => {
         var res = JSON.parse(await response.text());
 
         if (res.message == undefined) {
-            alert('Could not delete that workout');
+            setTextError('Could not delete that workout');
         }
         else {
-            alert(res.message);
-            navigation.navigate('Landing');
+            global.exerciseMap.delete(workoutName);
+
+            let index = global.exercises.findIndex(obj => obj.name === workoutName);
+            global.exercises.splice(index, 1);
+
+            // Toggle render update to force a render
+            setRenderUpdate(!renderUpdate);
+        }
+    }
+
+    const trash = (workoutName) => {
+        Alert.alert("Delete Workout", "Are you sure you want to delete this workout?", [
+            {text: "Yes", onPress: () => {deleteWorkout(workoutName);}},
+            {text: "No",  onPress: () => {return;}}
+        ])
+    }
+
+    // The render of the error message if there was one
+    const errorRender = () => {
+        if (txtError != '')
+            return (<View style={{justifyContent: 'center', alignItems: 'center'}}>
+                        <Text style={styles.lblError}>{txtError}</Text>
+                    </View>);
+        else
+            return (<View/>);
+    }
+
+    const unitTestingRender = () => {
+        if (UNIT_DISPLAY_WORKOUTS)
+            return (<TouchableOpacity onPress={() => { displayWorkouts(); }}>
+                        <Text style={{ color: colors.white }}>
+                            Tell me your displaying without showing me it (Click me!)
+                        </Text>
+                    </TouchableOpacity>);
+        else if (UNIT_DELETE_WORKOUT)
+            return (<TouchableOpacity onPress={() => { deleteWorkout(); }}>
+                        <Text style={{ color: colors.white }}>
+                            Delete something behind your back (Click me!)
+                        </Text>
+                    </TouchableOpacity>);
+        else
+            return (<View/>);
+    }
+
+    const cardsRender = () => {
+        const isFocused = useIsFocused();
+
+        if (isFocused && global.exercises.length != 0) {
+            // Since we're getting the workouts again, reset
+            workoutCards = [];
+
+            for (let i = 0; i < global.exercises.length; i++) {
+                if (!global.exerciseMap.has(global.exercises[i].name))
+                {
+                    global.exerciseMap.set(global.exercises[i].name, global.exercises[i]._id);
+                }
+
+                workoutCards.push({
+                    name:        global.exercises[i].name,
+                    reps:        global.exercises[i].reps,
+                    sets:        global.exercises[i].sets,
+                    totalWeight: global.exercises[i].totalWeight,
+                    timeSpent:   global.exercises[i].timeSpent,
+                });
+            }
+
+            return (
+                <View style={{ alignItems: 'center', justifyContent: 'space-evenly' }}>
+                    {/*With an array (workoutCards), the map() function will take each element (item) and 
+                       instantiate a new card with the given data. The key is to get rid of a warning
+                       about each child needing a 'unique' key*/}
+                    {workoutCards.map(item => <Card key={item.name} data={item}/>)}
+                </View>
+            );
         }
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 20, paddingHorizontal: 10 }}>
-                <Text style={{ fontSize: 30, fontWeight: 'bold', color: colors.CJpurple }}>Hi User</Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 40, paddingBottom: 20 }}>
-                {/* <Button title="Edit" onPress={() => { editWorkout(); }} /> */}
-                <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => navigation.navigate('AddWorkout')}>
-                    <Ionicons name="add-outline" color={colors.green} size={30} />
-                    <Text style={{ color: colors.green, paddingTop: 8 }}>Add Workout</Text>
+        <SafeAreaView style={styles.pageContainer}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: "15%", paddingHorizontal: 10 }}>
+                <Text style={styles.lblUserName}>
+                    Ready, {global.fullName}!
+                </Text>
+
+                <TouchableOpacity style={{ flexDirection: 'row', paddingLeft: 55 }} onPress ={() => {logout();}}>
+                    <Ionicons name="exit-outline" color={colors.red} size={30} />
+                    <Text style={styles.lblLogout}>Logout</Text>
                 </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: 'row', borderColor: 'black', borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 8, backgroundColor: colors.white, margin: 10 }}>
+
+            <View style={{ flexDirection: 'row', paddingTop: 30, paddingBottom: 20 }}>
+                <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => navigation.navigate('AddWorkout')}>
+                    <Ionicons name="add-outline" color={colors.green} size={30} />
+
+                    <Text style={{ color: colors.green, paddingTop: 8 }}>
+                        Add Workout
+                    </Text>
+                </TouchableOpacity>
+
+                <View style={{paddingTop: 8, paddingLeft: '60%'}}>
+                    <TouchableOpacity onPress={() => {displayWorkouts()}}>
+                        <Feather name='refresh-cw' size ={20} color={colors.green}/>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            <View style={styles.searchBar}>
                 <Feather name='search' size={20} color="black" style={{ marginRight: 5 }} />
                 <TextInput placeholder="Search Saved Workouts" />
             </View>
+
             <ScrollView>
-                <View>
-                    {/* <View style={{ height: 40 }} /> */}
+                {errorRender()}
+                
+                {/* {unitTestingRender()} */}
 
-                    <TouchableOpacity onPress={() => { displayWorkouts(); }}>
-                        <Text style={{ color: colors.white }}>Tell me your displaying without showing me it (Click me when unit testing!)</Text>
-                    </TouchableOpacity>
+                {cardsRender()}
 
-                    <View style={{ height: 40 }} />
-
-                    <TouchableOpacity onPress={() => { deleteWorkout(); }}>
-                        <Text style={{ color: colors.white }}>Delete something behind your back (Click me when unit testing!)</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ justifyContent: 'space-evenly' }}>
-                    {data.map(item => (
-                        <Card key={item.name} data={item} />
-                    ))}
-                </View>
-                {/*TEMPORARY, delete me or redo me*/}
             </ScrollView>
-            <ScrollView style={{ paddingTop: 20, paddingHorizontal: 10 }}>
-            </ScrollView>
+            
+            {/*A small buffer between the list and Tabs*/}
+            <ScrollView style={{ paddingTop: 20, paddingHorizontal: 10 }}/>
         </SafeAreaView >
     )
 }
 
 export default WorkoutScreen;
 
-
-//Data and Card are used to display the workouts/exercises and all its data. All hardcoded data as of right now however. 
-//I tried but I couldn't get the displayed info in the card to be align to the middle like in the prototype. 
-const data = [
-    { name: 'Arms', reps: 20, sets: 3, totalWeight: 500, timeSpent: 30, lightColor: colors.white },
-    { name: 'Delts', reps: 5, sets: 5, totalWeight: 1500, timeSpent: 60, lightColor: colors.white },
-    { name: 'Legs', reps: 10, sets: 4, totalWeight: 2000, timeSpent: 120, lightColor: colors.white },
-];
-
-const Card = ({ data }) => {
-    return (
-        <View style={{ shadowColor: 'black', shadowRadius: 2, shadowOffset: { width: -5, height: 10, }, shadowOpacity: 0.5, flex: 1, padding: 25, paddingBottom: -20, backgroundColor: data.lightColor, margin: 20, borderRadius: 10 }}>
-            <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-                <Text>Workout: {data.name} </Text>
-                <Text>Reps: {data.reps}</Text>
-                <Text>Sets: {data.sets} </Text>
-                <Text>Total Weight: {data.totalWeight}</Text>
-                <Text>Time Spent: {data.timeSpent}</Text>
-            </View>
-            <View style={{ paddingTop: 10, flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                <Feather name='edit' size={25} color={colors.CJpurple} style={{ marginRight: 5 }} />
-                <Ionicons name="trash-outline" color={colors.red} size={25} />
-            </View>
-        </View>
-    )
-}
-
 const styles = StyleSheet.create({
-    container: {
+    pageContainer: {
         flex: 1,
         backgroundColor: colors.black,
+    },
+    cardContainer: {
+        width: '80%',
+        shadowColor: 'black', 
+        shadowRadius: 2, 
+        shadowOffset: { width: -5, height: 10, }, 
+        shadowOpacity: 0.5, 
+        flex: 1, 
+        padding: 25, 
+        paddingBottom: -20, 
+        backgroundColor: colors.white,
+        margin: 20, 
+        borderRadius: 10
+    },
+    cardDataContainer: {
+        flexDirection: 'column',
+        alignItems: 'center', 
+        justifyContent: 'center' 
     },
     addWorkout: {
         flexDirection: 'row',
@@ -206,6 +324,35 @@ const styles = StyleSheet.create({
     },
     WO_list: {
         borderColor: 'black',
-
+    },
+    lblUserName: {
+        fontSize: 25, 
+        fontWeight: 'bold', 
+        color: colors.CJpurple
+    },
+    lblLogout: {
+        paddingTop: "1%", 
+        paddingRight: '5%', 
+        color: colors.red, 
+        fontSize: 20, 
+        fontWeight: 'bold' 
+    },
+    lblData: {
+        fontWeight: 'bold',
+        color: colors.black
+    },
+    lblError: {
+        fontSize: 25,
+        color: colors.red
+    },
+    searchBar: {
+        flexDirection: 'row', 
+        borderColor: 'black', 
+        borderWidth: 1, 
+        borderRadius: 8, 
+        paddingHorizontal: 10, 
+        paddingVertical: 8, 
+        backgroundColor: colors.white, 
+        margin: 10 
     }
 })
