@@ -147,7 +147,7 @@ const WorkoutScreen = ({ navigation }) => {
                 </View>
                 <View style={{ justifyContent: 'space-evenly' }}>
                     {data.map(item => (
-                        <Card data={item} />
+                        <Card key={item.name} data={item} />
                     ))}
                 </View>
                 {/*TEMPORARY, delete me or redo me*/}
