@@ -44,11 +44,19 @@ const BeginWorkoutScreen = ({ navigation }) => {
             {/**The Idea is that this view doesn't render until the Big button is pressed */}
             <View style={{ backgroundColor: colors.blackLite, borderRadius: 15 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', paddingTop: 20, paddingHorizontal: 10 }}>
-                    <TouchableOpacity onPress={() => { navigation.navigate('Begin') }} style={{ height: 60, width: 70, backgroundColor: colors.red, borderRadius: 10, justifyContent: 'center' }}>
-                        <Text style={{ alignSelf: 'center', color: colors.white, fontWeight: 'bold', fontSize: 20 }}>Cancel</Text>
+                    <TouchableOpacity onPress={() => { navigation.navigate('Begin') }} style={{
+                        shadowColor: 'black', shadowRadius: 1, shadowOffset: { width: 1, height: 2, },
+                        shadowOpacity: 0.5, height: 60, width: 70, backgroundColor: colors.red, borderRadius: 10, justifyContent: 'center'
+                    }}>
+                        <Text style={styles.btn}>Cancel</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { navigation.navigate('Begin') }} style={{ justifyContent: 'center', height: 60, width: 70, backgroundColor: colors.blue, borderRadius: 10 }}>
-                        <Text style={{ alignSelf: 'center', color: colors.white, fontWeight: 'bold', fontSize: 20, }}>Save</Text>
+                    <TouchableOpacity onPress={() => { navigation.navigate('Begin') }} style={{
+                        justifyContent: 'center', height: 60, width: 70, backgroundColor: colors.blue, borderRadius: 10, shadowColor: 'black',
+                        shadowRadius: 1,
+                        shadowOffset: { width: 3, height: 2, },
+                        shadowOpacity: 0.5,
+                    }}>
+                        <Text style={styles.btn}>Save</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignContent: 'flex-start' }}>
@@ -111,16 +119,18 @@ const styles = StyleSheet.create({
         paddingBottom: 8,
         borderWidth: 2,
         borderColor: 'black',
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 50,
         fontSize: 15,
         backgroundColor: colors.white,
         color: colors.black,
         shadowColor: 'black',
-        shadowRadius: 3,
-        shadowOffset: { width: 3, height: 10, },
+        shadowRadius: 1,
+        shadowOffset: { width: 3, height: 2, },
         shadowOpacity: 0.5,
+    },
+    btn: {
+        alignSelf: 'center',
+        color: colors.white,
+        fontWeight: 'bold',
+        fontSize: 20,
     },
 })
