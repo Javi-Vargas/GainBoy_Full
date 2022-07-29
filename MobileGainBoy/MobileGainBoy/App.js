@@ -8,12 +8,12 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import colors from './assets/colors'
 
-import LoginScreen          from "./src/screens/LoginScreen";
-import SignUpScreen         from "./src/screens/SignUpScreen";
-import LandingScreen        from "./src/screens/LandingScreen";
-import ForgotPasswordScreen from "./src/screens/ForgotPasswordScreen";
-import VerificationScreen   from './src/screens/VerificationScreen';
-import AddWorkoutScreen     from './src/screens/AddWorkoutScreen';
+import LoginScreen          from "./src/LoginScreen";
+import SignUpScreen         from "./src/SignUpScreen";
+import LandingScreen        from "./src/LandingScreen";
+import ForgotPasswordScreen from "./src/ForgotPasswordScreen";
+import VerificationScreen   from './src/VerificationScreen';
+import AddWorkoutScreen     from './src/AddWorkoutScreen';
 
 const Stack = createNativeStackNavigator();
 

@@ -6,7 +6,7 @@ import {
     Image,
     TouchableOpacity
 } from 'react-native';
-import colors from '../../assets/colors'
+import colors from "../assets/colors"
 
 function VerificationScreen({ navigation }) {
 
@@ -69,7 +69,7 @@ function VerificationScreen({ navigation }) {
             <View style={{height: 50}} />
 
             <View>
-                <Image style={styles.img} source={require('./../../assets/verificationImage.png')} />
+                <Image style={styles.img} source={require('../assets/verificationImage.png')} />
             </View>
 
             <View style={{height: 50}} />

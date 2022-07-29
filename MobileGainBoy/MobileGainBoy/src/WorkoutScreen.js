@@ -10,7 +10,7 @@ import { View,
 import { useIsFocused } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
-import colors from '../../assets/colors'
+import colors from "../assets/colors"
 
 // PREPROCESSORS for Unit testing
 const UNIT_UPDATE_WORKOUT   = false;

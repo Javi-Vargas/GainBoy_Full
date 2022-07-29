@@ -1,5 +1,5 @@
 import React from "react";
-import Tabs from '../../navigation/tabs';
+import Tabs from '../navigation/tabs';
 
 const LandingScreen = ({ navigation }) => {
     return (
