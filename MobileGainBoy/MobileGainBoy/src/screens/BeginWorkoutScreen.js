@@ -35,7 +35,7 @@ const BeginWorkoutScreen = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
             {/**This first view is for the big button to start workoing out */}
             <View style={{ flexDirection: 'row', marginBottom: 80, justifyContent: 'center', alignContent: 'center', alignItems: 'center', paddingTop: 20, paddingBottom: 20, backgroundColor: colors.CJpurple, borderRadius: 10, top: "10%", shadowColor: 'black', shadowRadius: 3, shadowOffset: { width: -5, height: 7, }, shadowOpacity: 0.5, }}>
-                <TouchableOpacity onPress={() => { navigation.navigate('BlankWO') }} style={{ flex: 'row', paddingHorizontal: 20, borderRadius: 10 }}>
+                <TouchableOpacity style={{ flex: 'row', paddingHorizontal: 20, borderRadius: 10 }}>
                     <Text style={{ color: colors.white, fontWeight: 'bold', fontSize: 20 }}>Begin FreeStyle Workout</Text>
                 </TouchableOpacity>
             </View>
