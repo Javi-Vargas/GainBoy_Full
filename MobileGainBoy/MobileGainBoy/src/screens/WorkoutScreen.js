@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import { View, 
-         Text, 
-         Button, 
+         Text,
          StyleSheet, 
          ScrollView, 
          SafeAreaView, 
@@ -14,43 +13,20 @@ import Feather from 'react-native-vector-icons/Feather'
 import colors from '../../assets/colors'
 
 // PREPROCESSORS for Unit testing
-const UNIT_UPDATE_WORKOUT   = true;
-const UNIT_DISPLAY_WORKOUTS = true;
-const UNIT_DELETE_WORKOUT   = true;
+const UNIT_UPDATE_WORKOUT   = false;
+const UNIT_DISPLAY_WORKOUTS = false;
+const UNIT_DELETE_WORKOUT   = false;
 
 let workoutCards = new Array();
+let indexOfCardEdit = -1;
 
 const WorkoutScreen = ({ navigation }) => {
 
     // The error message state
     const [txtError, setTextError] = useState('');
 
+    // Force render updates
     const [renderUpdate, setRenderUpdate] = useState(false);
-
-    const Card = ({ data }) => {
-        return (
-            <View style={styles.cardContainer}>
-                <View style={styles.cardDataContainer}>
-                    <Text style={styles.lblData}> Workout: {data.name} </Text>
-                    <Text style={styles.lblData}> Reps: {data.reps}    </Text>
-                    <Text style={styles.lblData}> Sets: {data.sets}    </Text>
-                    <Text style={styles.lblData}> Total Weight (lb): {data.totalWeight}</Text>
-                    <Text style={styles.lblData}> Time Spent: {data.timeSpent} </Text>
-                </View>
-                
-                {/*Edit and Delete icons*/}
-                <View style={{ paddingTop: 20, flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                    <TouchableOpacity onPress={() => alert('Editing')}>
-                        <Feather name='edit' size={25} color={colors.CJpurple} style={{ marginRight: 5 }} />
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity onPress={() => {trash(data.name);}}>
-                        <Ionicons name="trash-outline" color={colors.red} size={25} />
-                    </TouchableOpacity>
-                </View>
-            </View>
-        )
-    }
     
     const logout = () => {
         setTextError('');
@@ -63,41 +39,6 @@ const WorkoutScreen = ({ navigation }) => {
         global.exerciseMap.clear();
         workoutCards = [];
         navigation.navigate('Login');
-    }
-    
-    const updateWorkout = async (workoutName) => {
-        var obj;
-
-        // <----------UNIT TESTING----------> 
-        //  Automated test for updating a workout
-        if (UNIT_UPDATE_WORKOUT) {
-            obj = {_id: global.exerciseMap.get('something'), token: global.token, 
-                   name: 'somethingTheSequel', userId: '777', reps: '99', sets: '99', 
-                   totalWeight: '9000', timeSpent: '99'};
-        }
-        // --------------------------------->
-        else {
-            //TODO: Need to first check the workout name is a key in the map, then fill accordingly
-            //obj = {_id: global.exerciseMap.get('something'), token: global.token, 
-            //       name: , userId: global.userId, reps: , sets: , totalWeight: , timeSpent: };
-        }
-
-        var js = JSON.stringify(obj);
-
-        const response = await fetch(
-            'https://gainzboy.herokuapp.com/auth/updateWorkout',
-            { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
-        );
-
-        var res = JSON.parse(await response.text());
-
-        if (res.message == undefined) {
-            setTextError('Error occurred updating workout');
-        }
-        else {
-            // Toggle render update to force a render
-            setRenderUpdate(!renderUpdate);
-        }
     }
 
     const displayWorkouts = async () => {
@@ -133,49 +74,7 @@ const WorkoutScreen = ({ navigation }) => {
         }
     }
 
-    const deleteWorkout = async (workoutName) => {
-        var obj;
-
-        // <----------UNIT TESTING----------> 
-        //  Automated test for deleting a workout
-        if (UNIT_DELETE_WORKOUT) {
-            obj = {token: global.token, _id: global.exerciseMap.get('something')};
-        }
-        // --------------------------------->
-        else {
-            obj = {token: global.token, _id: global.exerciseMap.get(workoutName)};
-        }
-
-        var js = JSON.stringify(obj);
-
-        const response = await fetch(
-            'https://gainzboy.herokuapp.com/auth/deleteWorkout',
-            { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
-        );
-
-        var res = JSON.parse(await response.text());
-
-        if (res.message == undefined) {
-            setTextError('Could not delete that workout');
-        }
-        else {
-            global.exerciseMap.delete(workoutName);
-
-            let index = global.exercises.findIndex(obj => obj.name === workoutName);
-            global.exercises.splice(index, 1);
-
-            // Toggle render update to force a render
-            setRenderUpdate(!renderUpdate);
-        }
-    }
-
-    const trash = (workoutName) => {
-        Alert.alert("Delete Workout", "Are you sure you want to delete this workout?", [
-            {text: "Yes", onPress: () => {deleteWorkout(workoutName);}},
-            {text: "No",  onPress: () => {return;}}
-        ])
-    }
-
+    
     // The render of the error message if there was one
     const errorRender = () => {
         if (txtError != '')
@@ -186,25 +85,8 @@ const WorkoutScreen = ({ navigation }) => {
             return (<View/>);
     }
 
-    const unitTestingRender = () => {
-        if (UNIT_DISPLAY_WORKOUTS)
-            return (<TouchableOpacity onPress={() => { displayWorkouts(); }}>
-                        <Text style={{ color: colors.white }}>
-                            Tell me your displaying without showing me it (Click me!)
-                        </Text>
-                    </TouchableOpacity>);
-        else if (UNIT_DELETE_WORKOUT)
-            return (<TouchableOpacity onPress={() => { deleteWorkout(); }}>
-                        <Text style={{ color: colors.white }}>
-                            Delete something behind your back (Click me!)
-                        </Text>
-                    </TouchableOpacity>);
-        else
-            return (<View/>);
-    }
-
     const cardsRender = () => {
-        const isFocused = useIsFocused();
+        let isFocused = useIsFocused();
 
         if (isFocused && global.exercises.length != 0) {
             // Since we're getting the workouts again, reset
@@ -218,19 +100,19 @@ const WorkoutScreen = ({ navigation }) => {
 
                 workoutCards.push({
                     name:        global.exercises[i].name,
-                    reps:        global.exercises[i].reps,
-                    sets:        global.exercises[i].sets,
-                    totalWeight: global.exercises[i].totalWeight,
-                    timeSpent:   global.exercises[i].timeSpent,
+                    reps:        global.exercises[i].reps.toString(),
+                    sets:        global.exercises[i].sets.toString(),
+                    totalWeight: global.exercises[i].totalWeight.toString(),
+                    timeSpent:   global.exercises[i].timeSpent.toString(),
+                    isEditing:   i == indexOfCardEdit
                 });
             }
 
             return (
                 <View style={{ alignItems: 'center', justifyContent: 'space-evenly' }}>
-                    {/*With an array (workoutCards), the map() function will take each element (item) and 
-                       instantiate a new card with the given data. The key is to get rid of a warning
-                       about each child needing a 'unique' key*/}
-                    {workoutCards.map(item => <Card key={item.name} data={item}/>)}
+                    {workoutCards.map(item => item.isEditing ? 
+                        <CardEdit key={item.name} data={item} renderState={[renderUpdate, setRenderUpdate]}/> : 
+                        <Card key={item.name} data={item} renderState={[renderUpdate, setRenderUpdate]}/>)}
                 </View>
             );
         }
@@ -272,16 +154,226 @@ const WorkoutScreen = ({ navigation }) => {
 
             <ScrollView>
                 {errorRender()}
-                
-                {/* {unitTestingRender()} */}
-
                 {cardsRender()}
-
             </ScrollView>
             
             {/*A small buffer between the list and Tabs*/}
             <ScrollView style={{ paddingTop: 20, paddingHorizontal: 10 }}/>
         </SafeAreaView >
+    )
+}
+
+const Card = ({ data, renderState }) => {
+    const deleteWorkout = async (workoutName) => {
+        var obj;
+
+        // <----------UNIT TESTING----------> 
+        //  Automated test for deleting a workout
+        if (UNIT_DELETE_WORKOUT) {
+            obj = {token: global.token, _id: global.exerciseMap.get('something')};
+        }
+        // --------------------------------->
+        else {
+            obj = {token: global.token, _id: global.exerciseMap.get(workoutName)};
+        }
+
+        var js = JSON.stringify(obj);
+
+        const response = await fetch(
+            'https://gainzboy.herokuapp.com/auth/deleteWorkout',
+            { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
+        );
+
+        var res = JSON.parse(await response.text());
+
+        if (res.message == undefined) {
+            setTextError('Could not delete that workout');
+        }
+        else {
+            global.exerciseMap.delete(workoutName);
+
+            let index = global.exercises.findIndex(obj => obj.name === workoutName);
+            global.exercises.splice(index, 1);
+
+            // Toggle render update to force a render
+            renderState[1](!renderState[0]);
+        }
+    }
+    
+    const editCard = (workoutName) => {
+        indexOfCardEdit = global.exercises.findIndex(obj => obj.name === workoutName);
+        
+        // Toggle render update to force a render
+        renderState[1](!renderState[0]);
+    }
+    
+    const trash = (workoutName) => {
+        Alert.alert("Delete Workout", "Are you sure you want to delete this workout?", [
+            {text: "Yes", onPress: () => {deleteWorkout(workoutName);}},
+            {text: "No",  onPress: () => {return;}}
+        ])
+    }
+    
+    return (
+        <View style={styles.cardContainer}>
+            <View style={styles.cardDataContainer}>
+                <Text style={styles.lblData}> Workout: {data.name} </Text>
+                <View style={{height: 10}}/>
+                <Text style={styles.lblData}> Reps: {data.reps}    </Text>
+                <View style={{height: 10}}/>
+                <Text style={styles.lblData}> Sets: {data.sets}    </Text>
+                <View style={{height: 10}}/>
+                <Text style={styles.lblData}> Total Weight (lb): {data.totalWeight}</Text>
+                <View style={{height: 10}}/>
+                <Text style={styles.lblData}> Time Spent: {data.timeSpent} </Text>
+                <View style={{height: 10}}/>
+            </View>
+            
+            {/*Edit and Delete icons*/}
+            <View style={{ paddingTop: 20, flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                <TouchableOpacity onPress={() => {editCard(data.name);}}>
+                    <Feather name='edit' size={25} color={colors.CJpurple} style={{ marginRight: 5 }} />
+                </TouchableOpacity>
+                
+                <TouchableOpacity onPress={() => {trash(data.name);}}>
+                    <Ionicons name="trash-outline" color={colors.red} size={25} />
+                </TouchableOpacity>
+            </View>
+        </View>
+    )
+}
+
+const CardEdit = ({ data, renderState }) => {
+
+    //The states to check if text input was received
+    const [exerciseName, setExerciseName] = useState('');
+    const [reps,         setReps]         = useState('');
+    const [sets,         setSets]         = useState('');
+    const [totalWeight,  setTotalWeight]  = useState('');
+    const [timeSpent,    setTimeSpent]    = useState('');
+    
+    const updateWorkout = async (workoutName) => {
+        var obj;
+        let jName, jReps, jSets, jTotalWeight, jTimeSpent;
+
+        // <----------UNIT TESTING----------> 
+        //  Automated test for updating a workout
+        if (UNIT_UPDATE_WORKOUT) {
+            obj = {_id: global.exerciseMap.get('something'), token: global.token, 
+                   name: 'somethingTheSequel', userId: '777', reps: '99', sets: '99', 
+                   totalWeight: '9000', timeSpent: '99'};
+        }
+        // --------------------------------->
+        else {
+            jName = exerciseName == '' ? global.exercises[indexOfCardEdit].name : exerciseName;
+            jReps = reps == '' ? global.exercises[indexOfCardEdit].reps : reps;
+            jSets = sets == '' ? global.exercises[indexOfCardEdit].sets : sets;
+            jTotalWeight = totalWeight == '' ? global.exercises[indexOfCardEdit].totalWeight : totalWeight;
+            jTimeSpent = timeSpent == '' ? global.exercises[indexOfCardEdit].timeSpent : timeSpent;
+            
+            obj = {_id: global.exerciseMap.get(workoutName), token: global.token, 
+                   name: jName, userId: global.userId, reps: jReps, sets: jSets, 
+                   totalWeight: jTotalWeight, timeSpent: jTimeSpent};
+        }
+
+        var js = JSON.stringify(obj);
+
+        const response = await fetch(
+            'https://gainzboy.herokuapp.com/auth/updateWorkout',
+            { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
+        );
+
+        var res = JSON.parse(await response.text());
+
+        if (res.message == undefined) {
+            setTextError('Error occurred updating workout');
+        }
+        else {
+            if (UNIT_UPDATE_WORKOUT) {
+                global.exercises[indexOfCardEdit].name = 'somethingTheSequel';
+            }
+            else {
+                global.exercises[indexOfCardEdit].name = jName;
+                global.exercises[indexOfCardEdit].reps = jReps;
+                global.exercises[indexOfCardEdit].sets = jSets;
+                global.exercises[indexOfCardEdit].totalWeight = jTotalWeight;
+                global.exercises[indexOfCardEdit].timeSpent = jTimeSpent;
+
+                // Reset states
+                if (exerciseName != '') setExerciseName('');
+                if (reps != '') setReps('');
+                if (sets != '') setSets('');
+                if (totalWeight != '') setTotalWeight('');
+                if (timeSpent != '') setTimeSpent('');
+            }
+
+            global.exercises[indexOfCardEdit].userId = global.userId;
+            global.exercises[indexOfCardEdit]._id = global.exerciseMap.get(workoutName);
+            
+            finishEdit();
+        }
+    }
+
+    const finishEdit = () => {
+        indexOfCardEdit = -1;
+        
+        // Toggle render update to force a render
+        renderState[1](!renderState[0]);
+    }
+    
+    return (
+        <View style={styles.cardContainer}>
+            <View style={styles.cardDataContainer}>
+                <View>
+                    <Text style={styles.lblWorkoutEdit}>Workout:</Text>
+                    <TextInput style={styles.txtBoxWorkout} placeholder={data.name}
+                        onChangeText={(value) => setExerciseName(value)}/>
+                </View>
+                <View style={{height: 10}}/>
+                <View>
+                    <Text style={styles.lblRepsEdit}>Reps:</Text>
+                    <TextInput style={styles.txtBox} placeholder={data.reps}
+                        onChangeText={(value) => setReps(value)}/>
+                </View>
+                <View style={{height: 10}}/>
+                <View>
+                    <Text style={styles.lblSetsEdit}>Sets:</Text>
+                    <TextInput style={styles.txtBox} placeholder={data.sets}
+                        onChangeText={(value) => setSets(value)}/>
+                </View>
+                <View style={{height: 10}}/>
+                <View>
+                    <Text style={styles.lblTotalWeightEdit}>Total Weight (lb):</Text>
+
+                    {/*Have to give this offset to appear centered*/}
+                    <View style={{paddingLeft: '11%'}}>
+                        <TextInput style={styles.txtBox} placeholder={data.totalWeight}
+                            onChangeText={(value) => setTotalWeight(value)}/>
+                    </View>
+                </View>
+                <View style={{height: 10}}/>
+                <View>
+                    <Text style={styles.lblTimeSpentEdit}>Time Spent:</Text>
+                    
+                    {/*Have to give this offset to appear centered*/}
+                    <View style={{paddingLeft: '5%'}}>
+                        <TextInput style={styles.txtBox} placeholder={data.timeSpent}
+                            onChangeText={(value) => setTimeSpent(value)}/>
+                    </View>
+                </View>
+            </View>
+            
+            {/*Save And Exit icons*/}
+            <View style={{ paddingTop: 20, paddingBottom: 10, flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                <TouchableOpacity onPress={() => {updateWorkout(data.name);}}>
+                    <Feather name='check' size={25} color={colors.CJpurple} style={{ marginRight: 5 }} />
+                </TouchableOpacity>
+                
+                <TouchableOpacity onPress={() => {finishEdit();}}>
+                    <Feather name="slash" color={colors.red} size={25} />
+                </TouchableOpacity>
+            </View>
+        </View>
     )
 }
 
@@ -307,23 +399,7 @@ const styles = StyleSheet.create({
     },
     cardDataContainer: {
         flexDirection: 'column',
-        alignItems: 'center', 
-        justifyContent: 'center' 
-    },
-    addWorkout: {
-        flexDirection: 'row',
-    },
-    editBtn: {
-        left: 10,
-        top: 10,
-    },
-    plusBtn: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
-    },
-    WO_list: {
-        borderColor: 'black',
+        alignItems: 'center'
     },
     lblUserName: {
         fontSize: 25, 
@@ -337,13 +413,52 @@ const styles = StyleSheet.create({
         fontSize: 20, 
         fontWeight: 'bold' 
     },
+    lblWorkoutEdit: {
+        paddingLeft: '25%',
+        paddingBottom: '3%',
+        fontWeight: 'bold',
+        color: colors.black
+    },
+    lblRepsEdit: {
+        paddingLeft: '3%',
+        paddingBottom: '3%',
+        fontWeight: 'bold',
+        color: colors.black
+    },
+    lblSetsEdit: {
+        paddingLeft: '3%',
+        paddingBottom: '3%',
+        fontWeight: 'bold',
+        color: colors.black
+    },
+    lblTotalWeightEdit: {
+        paddingBottom: '3%',
+        fontWeight: 'bold',
+        color: colors.black
+    },
+    lblTimeSpentEdit: {
+        paddingBottom: '3%',
+        fontWeight: 'bold',
+        color: colors.black
+    },
     lblData: {
         fontWeight: 'bold',
+        paddingBottom: 3,
         color: colors.black
     },
     lblError: {
         fontSize: 25,
         color: colors.red
+    },
+    txtBoxWorkout: {
+        width: 200,
+        textAlign: 'center',
+        borderWidth: 1
+    },
+    txtBox: {
+        width: 50,
+        textAlign: 'center',
+        borderWidth: 1
     },
     searchBar: {
         flexDirection: 'row', 

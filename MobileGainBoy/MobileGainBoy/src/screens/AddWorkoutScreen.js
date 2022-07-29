@@ -86,73 +86,76 @@ const AddWorkoutScreen = ({ navigation }) => {
                 <Text style={styles.lblTitle}>New Exercise Info</Text>
             </View>
 
-            <View style={styles.txtBoxContainer}>
-                <TextInput style={styles.txtBox}
-                    placeholder="Exercise Name:" placeholderTextColor={colors.black}
-                    onChangeText={(value) => setExerciseName(value)} />
+            <ScrollView>
+                <View style={styles.txtBoxContainer}>
+                    <TextInput style={styles.txtBox}
+                        placeholder="Exercise Name:" placeholderTextColor={colors.black}
+                        onChangeText={(value) => setExerciseName(value)} />
 
-                <View style={styles.spaceContainer} />
+                    <View style={styles.spaceContainer} />
 
-                <TextInput style={styles.txtBox}
-                    placeholder="Repetitions:" placeholderTextColor={colors.black}
-                    onChangeText={(value) => setReps(value)} />
+                    <TextInput style={styles.txtBox}
+                        placeholder="Repetitions:" placeholderTextColor={colors.black}
+                        onChangeText={(value) => setReps(value)} />
 
-                <View style={styles.spaceContainer} />
+                    <View style={styles.spaceContainer} />
 
-                <TextInput style={styles.txtBox}
-                    placeholder="Sets:" placeholderTextColor={colors.black}
-                    onChangeText={(value) => setSets(value)} />
+                    <TextInput style={styles.txtBox}
+                        placeholder="Sets:" placeholderTextColor={colors.black}
+                        onChangeText={(value) => setSets(value)} />
 
-                <View style={styles.spaceContainer} />
+                    <View style={styles.spaceContainer} />
 
-                <TextInput style={styles.txtBox}
-                    placeholder="Total Weight (in lbs):" placeholderTextColor={colors.black}
-                    onChangeText={(value) => setTotalWeight(value)} />
+                    <TextInput style={styles.txtBox}
+                        placeholder="Total Weight (in lbs):" placeholderTextColor={colors.black}
+                        onChangeText={(value) => setTotalWeight(value)} />
 
-                <View style={styles.spaceContainer} />
+                    <View style={styles.spaceContainer} />
 
-                <TextInput style={styles.txtBox}
-                    placeholder="Time spent:" placeholderTextColor={colors.black}
-                    onChangeText={(value) => setTimeSpent(value)} />
-            </View>
-
-            <View style={{ height: 15 }} />
-
-            {errorRender()}
-
-            <View style={{ height: 50 }} />
-
-            <View style={{ paddingLeft: '50%' }}>
-                <View style={styles.indentContainer}>
-
-                    {/*Cancel Button.*/}
-                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Landing')}>
-                        <Text style={styles.lblBtn}>Cancel</Text>
-                    </TouchableOpacity>
-
-                    <View style={{ width: 50 }} />
-
-                    {/*Save Button.*/}
-                    <TouchableOpacity style={styles.btn} onPress={() => { handleSave(); }}>
-                        <Text style={styles.lblBtn}>Save</Text>
-                    </TouchableOpacity>
-
+                    <TextInput style={styles.txtBox}
+                        placeholder="Time spent:" placeholderTextColor={colors.black}
+                        onChangeText={(value) => setTimeSpent(value)} />
                 </View>
-            </View>
 
+                <View style={{ height: 15 }} />
 
-            {/* <View style={{ paddingTop: 45 }}>
-                <Text style={{ color: colors.green, fontSize: 20 }}>Exercises: </Text>
-                <TouchableOpacity style={styles.addExercise}>
-                    <Ionicons name="add-circle-outline" color={colors.green} size={30} />
-                    <Text style={{ paddingTop: 8, paddingLeft: 8, color: colors.green, fontWeight: 'bold' }}>Add Exercises</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', justifyContent: 'space-evenly' }}>
-                <TouchableOpacity onPress={() => handleSave()}>
-                    <Text style={styles.saveBtn}>Save</Text>
-                </TouchableOpacity>
-            </View> */}
+                {errorRender()}
+
+                <View style={{ height: 100 }} />
+
+                <View style={{ paddingLeft: '45%' }}>
+                    <View style={styles.indentContainer}>
+
+                        {/*Cancel Button.*/}
+                        <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Landing')}>
+                            <Text style={styles.lblBtn}>Cancel</Text>
+                        </TouchableOpacity>
+
+                        <View style={{ width: 50 }} />
+
+                        {/*Save Button.*/}
+                        <TouchableOpacity style={styles.btn} onPress={() => { handleSave(); }}>
+                            <Text style={styles.lblBtn}>Save</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                </View>
+
+                <View style={{ height: 50 }} />
+
+                {/* <View style={{ paddingTop: 45 }}>
+                    <Text style={{ color: colors.green, fontSize: 20 }}>Exercises: </Text>
+                    <TouchableOpacity style={styles.addExercise}>
+                        <Ionicons name="add-circle-outline" color={colors.green} size={30} />
+                        <Text style={{ paddingTop: 8, paddingLeft: 8, color: colors.green, fontWeight: 'bold' }}>Add Exercises</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', justifyContent: 'space-evenly' }}>
+                    <TouchableOpacity onPress={() => handleSave()}>
+                        <Text style={styles.saveBtn}>Save</Text>
+                    </TouchableOpacity>
+                </View> */}
+            </ScrollView>
         </SafeAreaView>
     )
 }
