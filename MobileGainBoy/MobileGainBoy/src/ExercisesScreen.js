@@ -263,6 +263,11 @@ const Card = ({ data, renderState }) => {
         ])
     }
 
+    const sendExercise = (workoutName) => {
+        let index = global.exercises.findIndex(obj => obj.name === workoutName);
+        global.exerciseHistory.push(global.exercises[index]);
+    }
+
     return (
         <View style={styles.cardContainer}>
             <View style={styles.cardDataContainer}>
@@ -278,7 +283,7 @@ const Card = ({ data, renderState }) => {
                 <View style={{ height: 10 }} />
             </View>
 
-            {/*Edit and Delete icons*/}
+            {/*Edit and Delete and Send icons*/}
             <View style={{ paddingTop: 20, flexDirection: 'row', justifyContent: 'space-evenly' }}>
                 <TouchableOpacity onPress={() => { editCard(data.name); }}>
                     <Feather name='edit' size={25} color={colors.CJpurple} style={{ marginRight: 5 }} />
@@ -288,8 +293,8 @@ const Card = ({ data, renderState }) => {
                     <Ionicons name="trash-outline" color={colors.red} size={25} />
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => { trash(data.name); }}>
-                    <Ionicons name="arrow-redo-circle-outline" color={colors.blue} size={25} />
+                <TouchableOpacity onPress={() => { sendExercise(data.name); }}>
+                    <Ionicons name="arrow-redo-circle-outline" color={'darkblue'} size={25} />
                 </TouchableOpacity>
             </View>
         </View>
