@@ -16,12 +16,15 @@ import colors from "../assets/colors"
 const UNIT_UPDATE_WORKOUT   = false;
 const UNIT_DISPLAY_WORKOUTS = false;
 const UNIT_DELETE_WORKOUT   = false;
+const UNIT_SEARCH           = false;
 
 let workoutCards = new Array();
 let indexOfCardEdit = -1;
 
 const WorkoutScreen = ({ navigation }) => {
 
+    const [txtSearch, setTextSearch] = useState('');
+    
     // The error message state
     const [txtError, setTextError] = useState('');
 
@@ -69,9 +72,49 @@ const WorkoutScreen = ({ navigation }) => {
         else {
             global.exercises = res.results;
 
+            if (txtError != '') setTextError('');
+
             // Toggle render update to force a render
             setRenderUpdate(!renderUpdate);
         }
+    }
+
+    const search = async () => {
+        if (txtSearch == '') return;
+        
+        var obj;
+
+        // <----------UNIT TESTING----------> 
+        //  Automated test for searching
+        if (UNIT_SEARCH) {
+            obj = {token: global.token, _id: global.exerciseMap.get('Front Squats')};
+        }
+        // --------------------------------->
+        else {
+            obj = {token: global.token, _id: global.exerciseMap.get(txtSearch)};
+        }
+
+        var js = JSON.stringify(obj);
+
+        const response = await fetch(
+            'https://gainzboy.herokuapp.com/auth/displayOneWorkout',
+            { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
+        );
+
+        let res = JSON.parse(await response.text());
+
+        if (res.errorMessage != undefined) {
+            setTextError('No exercise matches that search');
+            global.exercises = [];
+        }
+        else {
+            global.exercises = res.results;
+
+            if (txtError != '') setTextError('');
+        }
+
+        // Toggle render update to force a render
+        setRenderUpdate(!renderUpdate);
     }
 
     
@@ -140,16 +183,20 @@ const WorkoutScreen = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>
 
-                <View style={{paddingTop: 8, paddingLeft: '60%'}}>
+                <View style={{paddingTop: 8, paddingLeft: '52%'}}>
                     <TouchableOpacity onPress={() => {displayWorkouts()}}>
-                        <Feather name='refresh-cw' size ={20} color={colors.green}/>
+                        <Text style={{fontSize: 15, color: colors.green}}>Show All</Text>
                     </TouchableOpacity>
                 </View>
             </View>
 
             <View style={styles.searchBar}>
-                <Feather name='search' size={20} color="black" style={{ marginRight: 5 }} />
-                <TextInput placeholder="Search Saved Workouts" />
+                <TextInput style={styles.txtSearch} placeholder="Search Saved Workouts" 
+                    onChangeText={(value) => setTextSearch(value)}/>
+                
+                <TouchableOpacity style={{marginTop: 3, marginLeft: 50}}onPress={() => {search();}}>
+                    <Feather name='search' size={28} color="black"/>
+                </TouchableOpacity>
             </View>
 
             <ScrollView>
@@ -460,7 +507,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         borderWidth: 1
     },
+    txtSearch: {
+        fontSize: 15,
+        width: '75%'
+    },
     searchBar: {
+        height: 55,
         flexDirection: 'row', 
         borderColor: 'black', 
         borderWidth: 1, 
