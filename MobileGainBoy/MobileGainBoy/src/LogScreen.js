@@ -12,7 +12,7 @@ const LogScreen = ({ navigation }) => {
         let time = getCurrentTime();
         setTime(time);
         let today = new Date();
-        let date = (today.getMonth() + 1) + '/' + today.getFullYear();
+        let date = (today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear();
         setDate(date);
     }, []);
 
@@ -24,50 +24,51 @@ const LogScreen = ({ navigation }) => {
         return hours + ':' + minutes + ':' + seconds;
     }
 
-    const getCurrentDate = () => {
-        let today = new Date();
-        return today.getMonth() + '/' + today.getDay() + '/' + today.getFullYear();
+    const cardsRender = () => {
+        if (global.exerciseHistory.length != 0) {
+            return (
+                <View style={styles.cardsContainer}>
+                    {global.exerciseHistory.map(item => (
+                        <Card key={item.name} data={item} />
+                    ))}
+                </View>
+            );
+        }
+        else {
+            return (<View/>);
+        }
     }
 
-
     return (
-        <View style={styles.drawer}>
-            <SafeAreaView>
-                {/* <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 47, paddingHorizontal: 10 }} onPress={() => navigation.openDrawer()}>
-                    <Ionicons name="menu-outline" color="blue" size={30} />
-                </TouchableOpacity> */}
-                <View>
-                    <Text style={{ paddingTop: 40, padding: 30, fontSize: 30, fontWeight: 'bold', color: colors.green }}>Workout History:</Text>
-                </View>
-                <ScrollView>
-                    <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 20, color: colors.green }}>{date}</Text>
-                    <View style={{ flexDirection: 'column', justifyContent: 'space-evenly', margin: 10 }}>
-                        {data.map(item => (
-                            <Card key={item.name} data={item} />
-                        ))}
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
-        </View>
+        <SafeAreaView style={styles.container}>
+            <View>
+                <Text style={styles.lblWorkoutHistory}>Workout History:</Text>
+                <Text style={styles.lblDate}>{date}</Text>
+            </View>
+            <ScrollView>
+                {cardsRender()}
+            </ScrollView>
+        </SafeAreaView>
     )
 }
 
 export default LogScreen;
 
-const data = [
-    { name: 'Arms', reps: 20, sets: 3, totalWeight: 500, timeSpent: 30, lightColor: colors.white },
-    { name: 'Delts', reps: 5, sets: 5, totalWeight: 1500, timeSpent: 60, lightColor: colors.white },
-    { name: 'Legs', reps: 10, sets: 4, totalWeight: 2000, timeSpent: 120, lightColor: colors.white },
-];
-
 const Card = ({ data }) => {
     return (
-        <View style={{ shadowColor: 'black', shadowRadius: 2, shadowOffset: { width: -10, height: 10, }, shadowOpacity: 0.5, flex: 1, padding: 30, backgroundColor: data.lightColor, margin: 10, borderRadius: 10 }}>
-            <Text>Workout: {data.name} </Text>
-            <Text>Reps: {data.reps}</Text>
-            <Text>Sets: {data.sets} </Text>
-            <Text>Total Weight: {data.totalWeight}</Text>
-            <Text>Time Spent: {data.timeSpent}</Text>
+        <View style={styles.cardContainer}>
+            <View style={styles.cardDataContainer}>
+                <Text style={styles.lblData}> Workout: {data.name} </Text>
+                <View style={styles.cardDataSpace}/>
+                <Text style={styles.lblData}> Reps: {data.reps}    </Text>
+                <View style={styles.cardDataSpace}/>
+                <Text style={styles.lblData}> Sets: {data.sets}    </Text>
+                <View style={styles.cardDataSpace}/>
+                <Text style={styles.lblData}> Total Weight (lb): {data.totalWeight}</Text>
+                <View style={styles.cardDataSpace}/>
+                <Text style={styles.lblData}> Time Spent: {data.timeSpent} </Text>
+                <View style={styles.cardDataSpace}/>
+            </View>
         </View>
     )
 }
@@ -75,17 +76,51 @@ const Card = ({ data }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: "#8fcbbc",
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-    },
-    drawer: {
-        flex: 1,
         backgroundColor: colors.black,
         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     },
-    WO_Logs: {
-
-    }
+    cardsContainer: {
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: 'space-evenly', 
+        margin: 10
+    },
+    cardContainer: {
+        width: '80%',
+        shadowColor: 'black', 
+        shadowRadius: 2, 
+        shadowOffset: { width: -5, height: 10, }, 
+        shadowOpacity: 0.5, 
+        flex: 1, 
+        padding: 25, 
+        paddingBottom: -20, 
+        backgroundColor: colors.white,
+        margin: 20, 
+        borderRadius: 10
+    },
+    cardDataContainer: {
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    cardDataSpace: {
+        height: 10
+    },
+    lblWorkoutHistory: {
+        paddingTop: 40, 
+        padding: 30, 
+        fontSize: 30, 
+        fontWeight: 'bold', 
+        color: colors.green
+    },
+    lblDate: {
+        padding: 20, 
+        fontWeight: 'bold', 
+        fontSize: 20, 
+        color: colors.green
+    },
+    lblData: {
+        fontWeight: 'bold',
+        paddingBottom: 3,
+        color: colors.black
+    },
 })

@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 
-import WorkoutScreen      from "../src/WorkoutScreen";
+import ExercisesScreen    from "../src/ExercisesScreen";
 import LogScreen          from "../src/LogScreen";
 import BeginWorkoutScreen from "../src/BeginWorkoutScreen";
 
@@ -18,7 +18,7 @@ const Tabs = () => {
             tabBarActiveTintColor: "yellow",
 
         }}>
-            <Tab.Screen name="Workouts" component={WorkoutScreen} options={{
+            <Tab.Screen name="Exercises" component={ExercisesScreen} options={{
                 tabBarIcon: ({ color, size }) => (
                     <Ionicons name="barbell-outline" color={color} size={size} />
                 )

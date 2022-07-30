@@ -21,7 +21,7 @@ const UNIT_SEARCH           = false;
 let workoutCards = new Array();
 let indexOfCardEdit = -1;
 
-const WorkoutScreen = ({ navigation }) => {
+const ExercisesScreen = ({ navigation }) => {
 
     const [txtSearch, setTextSearch] = useState('');
     
@@ -40,6 +40,7 @@ const WorkoutScreen = ({ navigation }) => {
         global.fullName = "";
         global.exercises = [];
         global.exerciseMap.clear();
+        global.exerciseHistory = [];
         workoutCards = [];
         navigation.navigate('Login');
     }
@@ -424,7 +425,7 @@ const CardEdit = ({ data, renderState }) => {
     )
 }
 
-export default WorkoutScreen;
+export default ExercisesScreen;
 
 const styles = StyleSheet.create({
     pageContainer: {

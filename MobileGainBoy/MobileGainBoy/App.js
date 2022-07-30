@@ -17,13 +17,14 @@ import AddWorkoutScreen     from './src/AddWorkoutScreen';
 
 const Stack = createNativeStackNavigator();
 
-global.userId      = "";
-global.token       = "";
-global.email       = "";
-global.password    = "";
-global.fullName    = "";
-global.exercises   = []; 
-global.exerciseMap = new Map(); //Key: workout name, Value: workout id
+global.userId          = "";
+global.token           = "";
+global.email           = "";    // need to cache this for verification
+global.password        = "";    // need to cache this for verification
+global.fullName        = "";
+global.exercises       = []; 
+global.exerciseMap     = new Map(); //Key: workout name, Value: workout id
+global.exerciseHistory = [];
 
 export default function App() {
     return (
