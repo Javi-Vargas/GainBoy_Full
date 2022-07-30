@@ -1,102 +1,193 @@
-import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, Text, ScrollView, StyleSheet, StatusBar, TouchableOpacity, TextInput } from 'react-native';
+import React, { useState, useEffect, Component, Alert } from "react";
+import { SafeAreaView, View, Text, Button, StyleSheet, StatusBar, TouchableOpacity, TextInput } from 'react-native';
+import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
+import { useIsFocused } from '@react-navigation/native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import colors from '../assets/colors'
+import Feather from 'react-native-vector-icons/Feather'
+import colors from "../assets/colors";
 
-let pressCount = 0;
+// PREPROCESSORS for Unit testing
+const UNIT_DISPLAY_WORKOUTS = false;
+
+let beginWorkoutCards = new Array();
+let indexOfCardEdit = -1;
 
 const BeginWorkoutScreen = ({ navigation }) => {
-    const [seconds, setSeconds] = useState(0);
-    const [minutes, setMinutes] = useState(0);
-    const [hours, setHours] = useState(0);
-    const [workoutBegin, setWorkoutBegin] = useState(false);
+    // The error message state
+    const [txtError, setTextError] = useState('');
 
-    var timer;
-    useEffect(() => {
-        timer = setInterval(() => {
-            setSeconds(seconds + 1);
+    // Force render updates
+    const [renderUpdate, setRenderUpdate] = useState(false);
 
-            if (seconds === 59) {
-                setMinutes(minutes + 1);
-                setSeconds(0);
-            }
+    const displayWorkouts = async () => {
+        global.exerciseHistory
+        for (let i = 0; i < global.exerciseHistory.length; i++) {
+            console.log(global.exerciseHistory[i].name)
+            //console.log(global.exerciseHistory.pop())
+        }
+        var obj;
 
-            if (minutes === 59) {
-                setHours(hours + 1);
-                setMinutes(0);
-            }
-        }, 1000)
+        // <----------UNIT TESTING----------> 
+        //  Automated test for displaying workouts
+        if (UNIT_DISPLAY_WORKOUTS) {
+            obj = { token: global.token, userId: '777' };
+        }
+        // --------------------------------->
+        else {
+            obj = { token: global.token, userId: global.userId };
+        }
 
-        return () => clearInterval(timer);
-    });
-    
-    const beginWorkoutRender = () => {
-        if (workoutBegin) {
-            return (<View style={styles.beginWorkoutContainer}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', paddingTop: 20, paddingHorizontal: 10 }}>
-                            <TouchableOpacity style={styles.btnCancel} onPress={() => setWorkoutBegin(false)}>
-                                <Text style={styles.lblBtn}>Cancel</Text>
-                            </TouchableOpacity>
+        var js = JSON.stringify(obj);
 
-                            <TouchableOpacity style={styles.btnSave} onPress={() => { navigation.navigate('Begin') }} >
-                                <Text style={styles.lblBtn}>Save</Text>
-                            </TouchableOpacity>
-                        </View>
+        const response = await fetch(
+            'https://gainzboy.herokuapp.com/auth/displayWorkouts',
+            { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
+        );
 
-                        <View style={styles.timerContainer}>
-                            <Text style={styles.lblTimer}>Timer: </Text>
-                            <Text style={styles.lblTimer}>
-                                {minutes < 10 ? '0' + minutes : minutes} : {seconds < 10 ? '0' + seconds : seconds}
-                            </Text>
-                        </View>
+        let res = JSON.parse(await response.text());
 
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                            <TouchableOpacity style={styles.addExercise}>
-                                <Ionicons name="add-circle-outline" color={colors.green} size={30} />
-                                <Text style={styles.lblAddExercise}>Add Exercises</Text>
-                            </TouchableOpacity>
-
-                            {/**This view displays the TextInput boxes and will take exercise info from user */}
-                            {/**These are meant to display onPress of the 'add Exercise' button, and be removed after info is input. 
-                             * Waiting for button to be pressed again */}
-                            <View style={{ alignItems: 'center' }}>
-                                <TextInput style={styles.txtExcerciseInfo} placeholder="Name: " placeholderTextColor={colors.black} />
-                                <TextInput style={styles.txtExcerciseInfo} placeholder="Reps: " placeholderTextColor={colors.black} />
-                                <TextInput style={styles.txtExcerciseInfo} placeholder="Weight/Rep: " placeholderTextColor={colors.black} />
-                            </View>
-                        </View>
-                    </View>);
+        if (res.status != undefined) {
+            setTextError('Could not display your workouts');
         }
         else {
+            global.exerciseHistory = res.results;
+
+            if (txtError != '') setTextError('');
+
+            // Toggle render update to force a render
+            setRenderUpdate(!renderUpdate);
+        }
+    }
+
+    // The render of the error message if there was one
+    const errorRender = () => {
+        if (txtError != '')
+            return (<View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={styles.lblError}>{txtError}</Text>
+            </View>);
+        else
             return (<View />);
+    }
+
+    {/**Renders Received Cards */ }
+    const receiveExercise = () => {
+        let isFocused = useIsFocused();
+        if (isFocused && global.exerciseHistory.length != 0) {
+            // Since we're getting the workouts again, reset
+            beginWorkoutCards = [];
+
+            for (let i = 0; i < global.exerciseHistory.length; i++) {
+                beginWorkoutCards.push({
+                    name: global.exerciseHistory[i].name,
+                    reps: global.exerciseHistory[i].reps.toString(),
+                    sets: global.exerciseHistory[i].sets.toString(),
+                    totalWeight: global.exerciseHistory[i].totalWeight.toString(),
+                    timeSpent: global.exerciseHistory[i].timeSpent.toString(),
+                    isEditing: i == indexOfCardEdit
+                });
+            }
+
+            return (
+                <View style={{ alignItems: 'center', justifyContent: 'space-evenly' }}>
+                    {beginWorkoutCards.map(item => item.isEditing ?
+                        <CardEdit key={item.name} data={item} renderState={[renderUpdate, setRenderUpdate]} /> :
+                        <Card key={item.name} data={item} renderState={[renderUpdate, setRenderUpdate]} />)}
+                </View>
+            );
         }
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            {/*This first view is for the big button to start working out */}
-            <View style={styles.beginBtnContainer}>
-                <TouchableOpacity style={styles.btnBeginWorkout} onPress={() => setWorkoutBegin(true)}>
-                    <Text style={{ color: colors.white, fontWeight: 'bold', fontSize: 20 }}>
-                        Begin FreeStyle Workout
-                    </Text>
+            <View>
+                <TouchableOpacity onPress={() => { displayWorkouts() }} style={styles.beginBtn}>
+                    <Text style={{ color: colors.white, fontWeight: 'bold', fontSize: 20 }}>Begin FreeStyle Workout</Text>
                 </TouchableOpacity>
             </View>
-
-            {/*This one starts the timer and displays the cancel or save workout buttons. As well as display the 'add Excersices' button */}
-            {/*The Idea is that this view doesn't render until the Big button is pressed */}
-            {beginWorkoutRender()}
-
-            {/**This scroll view will hold the list of exercises. Meant to render once the even the first exercise is added.
-             * Can be as short or long as user controls
-              */}
-            <ScrollView style={styles.scrollView}>
-                <Text style={{ color: colors.white }}>
-                    Just to show that this is a scroll view that will hold the list of exercise done in current workout
-                </Text>
+            <ScrollView>
+                {errorRender()}
+                {/* {cardsRender()} */}
+                {receiveExercise()}
             </ScrollView>
+            <ScrollView style={{ paddingTop: 20, paddingHorizontal: 10 }} />
         </SafeAreaView>
+    )
+}
+
+const Card = ({ data, renderState }) => {
+    const deleteWorkout = async (workoutName) => {
+        var obj;
+
+        // <----------UNIT TESTING----------> 
+        //  Automated test for deleting a workout
+        if (UNIT_DELETE_WORKOUT) {
+            obj = { token: global.token, _id: global.exerciseMap.get('something') };
+        }
+        // --------------------------------->
+        else {
+            obj = { token: global.token, _id: global.exerciseMap.get(workoutName) };
+        }
+
+        var js = JSON.stringify(obj);
+
+        const response = await fetch(
+            'https://gainzboy.herokuapp.com/auth/deleteWorkout',
+            { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
+        );
+
+        var res = JSON.parse(await response.text());
+
+        if (res.message == undefined) {
+            setTextError('Could not delete that workout');
+        }
+        else {
+            //Changed so it doesnt delete from exerciseMap. Only removes from exerciseHistory[]
+            let index = global.exerciseHistory.findIndex(obj => obj.name === workoutName);
+            global.exerciseHistory.splice(index, 1);
+
+            // Toggle render update to force a render
+            renderState[1](!renderState[0]);
+        }
+    }
+
+    const trash = (workoutName) => {
+        Alert.alert("Delete Workout", "Are you sure you want to delete this workout?", [
+            { text: "Yes", onPress: () => { deleteWorkout(workoutName); } },
+            { text: "No", onPress: () => { return; } }
+        ])
+    }
+
+    return (
+        <View style={styles.cardContainer}>
+            <View style={styles.cardDataContainer}>
+                <Text style={styles.lblData}> Workout: {data.name} </Text>
+                <View style={{ height: 10 }} />
+                <Text style={styles.lblData}> Reps: {data.reps}    </Text>
+                <View style={{ height: 10 }} />
+                <Text style={styles.lblData}> Sets: {data.sets}    </Text>
+                <View style={{ height: 10 }} />
+                <Text style={styles.lblData}> Total Weight (lb): {data.totalWeight}</Text>
+                <View style={{ height: 10 }} />
+                <Text style={styles.lblData}> Time Spent: {data.timeSpent} </Text>
+                <View style={{ height: 10 }} />
+            </View>
+
+            {/*Edit and Delete icons*/}
+            <View style={{ paddingTop: 20, flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                <TouchableOpacity onPress={() => { editCard(data.name); }}>
+                    <Feather name='edit' size={25} color={colors.CJpurple} style={{ marginRight: 5 }} />
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => { trash(data.name); }}>
+                    <Ionicons name="trash-outline" color={colors.red} size={25} />
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => { trash(data.name); }}>
+                    <Ionicons name="arrow-redo-circle-outline" color={colors.blue} size={25} />
+                </TouchableOpacity>
+            </View>
+        </View>
     )
 }
 
@@ -109,88 +200,33 @@ const styles = StyleSheet.create({
         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         paddingHorizontal: 15,
     },
-    beginWorkoutContainer: {
-        backgroundColor: colors.blackLite, 
-        borderRadius: 15
-    },
-    beginBtnContainer: {
-        flexDirection: 'row', 
-        justifyContent: 'center', 
-        alignContent: 'center', 
-        alignItems: 'center',
-        marginBottom: 80,
-        paddingTop: 20, 
-        paddingBottom: 20, 
-        backgroundColor: colors.CJpurple, 
-        borderRadius: 10,
-        top: "10%",
+    cardContainer: {
+        width: '80%',
         shadowColor: 'black',
-        shadowRadius: 3,
-        shadowOffset: { width: -5, height: 7, },
+        shadowRadius: 2,
+        shadowOffset: { width: -5, height: 10, },
         shadowOpacity: 0.5,
+        flex: 1,
+        padding: 25,
+        paddingBottom: -20,
+        backgroundColor: colors.white,
+        margin: 20,
+        borderRadius: 10
     },
-    timerContainer: { 
-        flexDirection: 'row', 
-        justifyContent: 'space-evenly', 
-        alignContent: 'flex-start' 
+    beginBtn: {
+        flexDirection: 'row', marginBottom: 80, justifyContent: 'center', alignContent: 'center', alignItems: 'center', paddingTop: 20, paddingBottom: 20, backgroundColor: colors.CJpurple, borderRadius: 10, top: "10%", shadowColor: 'black', shadowRadius: 3, shadowOffset: { width: -5, height: 7, }, shadowOpacity: 0.5,
     },
     scrollView: {
         borderColor: colors.green,
         borderWidth: 3,
         margin: 10,
         marginTop: 30,
-        borderRadius: 10
+        borderRadius: 10,
     },
     addExercise: {
         flexDirection: 'row',
     },
-    lblAddExercise: { 
-        paddingTop: 8, 
-        paddingLeft: 8, 
-        color: colors.green, 
-        fontWeight: 'bold'
-    },
-    lblTimer: {
-        padding: 20, 
-        fontSize: 30, 
-        fontWeight: 'bold', 
-        color: colors.white
-    },
-    lblBtn: {
-        alignSelf: 'center',
-        color: colors.white,
-        fontWeight: 'bold',
-        fontSize: 20,
-    },
-    btnBeginWorkout: {
-        flexDirection: 'row', 
-        paddingHorizontal: 20,
-        borderRadius: 10
-    },
-    btnCancel : {
-        justifyContent: 'center',
-        height: 60, 
-        width: 70, 
-        shadowColor: 'black', 
-        shadowRadius: 1, 
-        shadowOffset: { width: 1, height: 2, },
-        shadowOpacity: 0.5, 
-        backgroundColor: 
-        colors.red, 
-        borderRadius: 10
-    },
-    btnSave : {
-        justifyContent: 'center', 
-        height: 60, 
-        width: 70, 
-        shadowColor: 'black', 
-        shadowRadius: 1, 
-        shadowOffset: { width: 3, height: 2, }, 
-        shadowOpacity: 0.5, 
-        backgroundColor: colors.blue, 
-        borderRadius: 10
-    },
-    txtExcerciseInfo: {
+    txtSingleFactorInfo: {
         height: 30,
         width: 150,
         justifyContent: 'center',
@@ -206,5 +242,11 @@ const styles = StyleSheet.create({
         shadowRadius: 1,
         shadowOffset: { width: 3, height: 2, },
         shadowOpacity: 0.5,
+    },
+    btn: {
+        alignSelf: 'center',
+        color: colors.white,
+        fontWeight: 'bold',
+        fontSize: 20,
     },
 })
