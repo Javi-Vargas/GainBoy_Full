@@ -13,7 +13,7 @@ import SignUpScreen         from "./src/SignUpScreen";
 import LandingScreen        from "./src/LandingScreen";
 import ForgotPasswordScreen from "./src/ForgotPasswordScreen";
 import VerificationScreen   from './src/VerificationScreen';
-import AddWorkoutScreen     from './src/AddWorkoutScreen';
+import AddExerciseScreen    from './src/AddExerciseScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -65,7 +65,7 @@ export default function App() {
                               }}
                 />
                 <Stack.Screen name= "Verification" component={VerificationScreen} options={{headerShown: false}}/>
-                <Stack.Screen name= "AddWorkout" component={AddWorkoutScreen} options={{headerShown: false}}/>
+                <Stack.Screen name= "AddExercise" component={AddExerciseScreen} options={{headerShown: false}}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

@@ -7,7 +7,7 @@ import colors from "../assets/colors";
 // PREPROCESSORS for Unit testing
 const UNIT_ADD_WORKOUT = false;
 
-const AddWorkoutScreen = ({ navigation }) => {
+const AddExerciseScreen = ({ navigation }) => {
 
     //The states to check if text input was received
     const [exerciseName, setExerciseName] = useState('');
@@ -34,9 +34,9 @@ const AddWorkoutScreen = ({ navigation }) => {
         // --------------------------------->
         else {
             obj = {
-                token: global.token, name: exerciseName,
-                userId: global.userId, reps: reps, sets: sets,
-                totalWeight: totalWeight, timeSpent: timeSpent
+                token: global.token, name: exerciseName.trim(),
+                userId: global.userId, reps: reps.trim(), sets: sets.trim(),
+                totalWeight: totalWeight.trim(), timeSpent: timeSpent.trim()
             };
         }
 
@@ -142,25 +142,12 @@ const AddWorkoutScreen = ({ navigation }) => {
                 </View>
 
                 <View style={{ height: 50 }} />
-
-                {/* <View style={{ paddingTop: 45 }}>
-                    <Text style={{ color: colors.green, fontSize: 20 }}>Exercises: </Text>
-                    <TouchableOpacity style={styles.addExercise}>
-                        <Ionicons name="add-circle-outline" color={colors.green} size={30} />
-                        <Text style={{ paddingTop: 8, paddingLeft: 8, color: colors.green, fontWeight: 'bold' }}>Add Exercises</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', justifyContent: 'space-evenly' }}>
-                    <TouchableOpacity onPress={() => handleSave()}>
-                        <Text style={styles.saveBtn}>Save</Text>
-                    </TouchableOpacity>
-                </View> */}
             </ScrollView>
         </SafeAreaView>
     )
 }
 
-export default AddWorkoutScreen;
+export default AddExerciseScreen;
 
 const styles = StyleSheet.create({
     container: {

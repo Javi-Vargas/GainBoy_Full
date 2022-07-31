@@ -178,11 +178,11 @@ const ExercisesScreen = ({ navigation }) => {
             </View>
 
             <View style={{ flexDirection: 'row', paddingTop: 30, paddingBottom: 20 }}>
-                <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => navigation.navigate('AddWorkout')}>
+                <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => navigation.navigate('AddExercise')}>
                     <Ionicons name="add-outline" color={colors.green} size={30} />
 
                     <Text style={{ color: colors.green, paddingTop: 8 }}>
-                        Add Workout
+                        Add Exercise
                     </Text>
                 </TouchableOpacity>
 
@@ -345,11 +345,11 @@ const CardEdit = ({ data, renderState }) => {
         }
         // --------------------------------->
         else {
-            jName = exerciseName == '' ? global.exercises[indexOfCardEdit].name : exerciseName;
-            jReps = reps == '' ? global.exercises[indexOfCardEdit].reps : reps;
-            jSets = sets == '' ? global.exercises[indexOfCardEdit].sets : sets;
-            jTotalWeight = totalWeight == '' ? global.exercises[indexOfCardEdit].totalWeight : totalWeight;
-            jTimeSpent = timeSpent == '' ? global.exercises[indexOfCardEdit].timeSpent : timeSpent;
+            jName = exerciseName == '' ? global.exercises[indexOfCardEdit].name : exerciseName.trim();
+            jReps = reps == '' ? global.exercises[indexOfCardEdit].reps : reps.trim();
+            jSets = sets == '' ? global.exercises[indexOfCardEdit].sets : sets.trim();
+            jTotalWeight = totalWeight == '' ? global.exercises[indexOfCardEdit].totalWeight : totalWeight.trim();
+            jTimeSpent = timeSpent == '' ? global.exercises[indexOfCardEdit].timeSpent : timeSpent.trim();
 
             obj = {
                 _id: global.exerciseMap.get(workoutName), token: global.token,

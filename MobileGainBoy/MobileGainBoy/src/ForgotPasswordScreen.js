@@ -42,7 +42,7 @@ function ForgotPasswordScreen({ navigation }) {
             }
             // --------------------------------->
             else {
-                obj = {email: txtEmail};
+                obj = {email: txtEmail.trim()};
             }
 
             var js = JSON.stringify(obj);
@@ -92,7 +92,7 @@ function ForgotPasswordScreen({ navigation }) {
                     return;
                 }
                 
-                var obj = {code: Number(txtCode), password: txtPassword};
+                var obj = {code: Number(txtCode), password: txtPassword.trim()};
                 var js = JSON.stringify(obj);
     
                 const response = await fetch(
