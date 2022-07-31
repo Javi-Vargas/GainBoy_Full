@@ -1,29 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, Button, StyleSheet, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from "../assets/colors"
 
 
 const LogScreen = ({ navigation }) => {
-    const [time, setTime,] = useState(null);
     const [date, setDate,] = useState(null);
+    
     useEffect(() => {
-        let time = getCurrentTime();
-        setTime(time);
         let today = new Date();
         let date = (today.getMonth() + 1) + '/' + today.getDate() + '/' + today.getFullYear();
         setDate(date);
     }, []);
-
-    const getCurrentTime = () => {
-        let today = new Date();
-        let hours = (today.getHours() < 10 ? '0' : '') + today.getHours();
-        let minutes = (today.getMinutes() < 10 ? '0' : '') + today.getMinutes();
-        let seconds = (today.getSeconds() < 10 ? '0' : '') + today.getSeconds();
-        return hours + ':' + minutes + ':' + seconds;
-    }
-
+    
     const cardsRender = () => {
         if (global.exerciseHistory.length != 0) {
             return (
@@ -39,12 +30,27 @@ const LogScreen = ({ navigation }) => {
         }
     }
 
+    const timerRender = () => {
+        if (useIsFocused()) {
+            if (global.logTime == '') {
+                return (<View/>);
+            }
+            else {
+                return (<View style={{ flexDirection: 'row'}}>
+                            <Text style={styles.lblDate}>{date}</Text>
+                            <Text style={styles.lblTime}>Workout Time Spent: {global.logTime}</Text>
+                        </View>
+                );
+            }
+        }
+    }
+
     return (
         <SafeAreaView style={styles.container}>
-            <View>
-                <Text style={styles.lblWorkoutHistory}>Workout History:</Text>
-                <Text style={styles.lblDate}>{date}</Text>
-            </View>
+            <Text style={styles.lblWorkoutHistory}>Workout History:</Text>
+
+            {timerRender()}
+
             <ScrollView>
                 {cardsRender()}
             </ScrollView>
@@ -113,7 +119,8 @@ const styles = StyleSheet.create({
         color: colors.green
     },
     lblDate: {
-        padding: 20, 
+        paddingTop: 20, 
+        paddingLeft: 30,
         fontWeight: 'bold', 
         fontSize: 20, 
         color: colors.green
@@ -123,4 +130,11 @@ const styles = StyleSheet.create({
         paddingBottom: 3,
         color: colors.black
     },
+    lblTime: {
+        paddingTop: 20,
+        paddingLeft: 50,
+        fontWeight: 'bold', 
+        fontSize: 18, 
+        color: colors.green
+    }
 })

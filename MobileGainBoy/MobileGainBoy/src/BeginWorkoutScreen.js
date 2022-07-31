@@ -10,17 +10,24 @@ import colors from "../assets/colors";
 const BeginWorkoutScreen = ({ navigation }) => {
     const [workoutBegan, setWorkoutBegan] = useState(false);
     
-    const timerRender = () => {
+    const beginWorkoutRender = () => {
         if (workoutBegan) {
-            return (<Timer navigation={navigation}/>)
+            return (<View style={{paddingTop: '10%'}}>
+                        <Timer workoutState={setWorkoutBegan}/>
+                    </View>)
         }
         else {
-            return (<View/>);
+            return (<View style={{paddingTop: '10%'}}>
+                        <TouchableOpacity onPress={() => { setWorkoutBegan(true); }} style={styles.beginBtn}>
+                            <Text style={{ color: colors.white, fontWeight: 'bold', fontSize: 20 }}>Begin FreeStyle Workout</Text>
+                        </TouchableOpacity>
+                    </View>
+            );
         }
     }
     
     {/**Renders Received Cards */ }
-    const receiveExercises = () => {
+    const exercisesRender = () => {
         if (useIsFocused() && global.exerciseBegin.length != 0) {
             return (
                 <View style={{ alignItems: 'center', justifyContent: 'space-evenly' }}>
@@ -31,22 +38,22 @@ const BeginWorkoutScreen = ({ navigation }) => {
             );
         }
         else {
-            return (<View/>);
+            return (<View style={{alignItems: 'center', paddingTop: '45%'}}>
+                        <Text style={styles.lblScrollView}>
+                            Add exercises from the Exercises page to your workout and press the button to begin workout
+                        </Text>
+                    </View>);
         }
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            <View>
-                <TouchableOpacity onPress={() => { setWorkoutBegan(true); }} style={styles.beginBtn}>
-                    <Text style={{ color: colors.white, fontWeight: 'bold', fontSize: 20 }}>Begin FreeStyle Workout</Text>
-                </TouchableOpacity>
+            {beginWorkoutRender()}
 
-                {timerRender()}
-            </View>
-            <ScrollView>
-                {receiveExercises()}
+            <ScrollView style={styles.scrollViewContainer}>
+                {exercisesRender()}
             </ScrollView>
+
             <ScrollView style={{ paddingTop: 20, paddingHorizontal: 10 }} />
         </SafeAreaView>
     )
@@ -97,6 +104,13 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center'
     },
+    scrollViewContainer: {
+        borderColor: colors.green,
+        borderWidth: 3,
+        margin: 10,
+        marginTop: 30,
+        borderRadius: 10
+    },
     cardDataSpace: {
         height: 10
     },
@@ -116,42 +130,13 @@ const styles = StyleSheet.create({
         shadowOffset: { width: -5, height: 7, }, 
         shadowOpacity: 0.5,
     },
-    scrollView: {
-        borderColor: colors.green,
-        borderWidth: 3,
-        margin: 10,
-        marginTop: 30,
-        borderRadius: 10,
-    },
-    addExercise: {
-        flexDirection: 'row',
-    },
-    txtSingleFactorInfo: {
-        height: 30,
-        width: 150,
-        justifyContent: 'center',
-        paddingLeft: 25,
-        paddingRight: 25,
-        paddingBottom: 8,
-        borderWidth: 2,
-        borderColor: 'black',
-        fontSize: 15,
-        backgroundColor: colors.white,
-        color: colors.black,
-        shadowColor: 'black',
-        shadowRadius: 1,
-        shadowOffset: { width: 3, height: 2, },
-        shadowOpacity: 0.5,
-    },
-    btn: {
-        alignSelf: 'center',
-        color: colors.white,
-        fontWeight: 'bold',
-        fontSize: 20,
-    },
     lblData: {
         fontWeight: 'bold',
         paddingBottom: 3,
         color: colors.black
+    },
+    lblScrollView: {
+        fontSize: 15,
+        color: colors.white
     }
 })

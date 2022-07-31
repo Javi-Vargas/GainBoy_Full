@@ -26,6 +26,7 @@ global.exercises        = [];        // caches ALL the exercises of the user
 global.exerciseMap      = new Map(); // Key: workout name, Value: workout id
 global.exerciseBegin    = [];        // the list of exercises for BeginWorkout list
 global.exerciseHistory  = [];        // the list of exercises used in the last workout
+global.logTime          = ""; 
 
 export default function App() {
     return (

@@ -43,6 +43,7 @@ const ExercisesScreen = ({ navigation }) => {
         global.exercises = [];
         global.exerciseMap.clear();
         global.exerciseHistory = [];
+        global.logTime = "";
         workoutCards = [];
         navigation.navigate('Login');
     }

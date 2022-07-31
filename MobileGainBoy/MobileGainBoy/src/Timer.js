@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, Text, Button, StyleSheet, StatusBar, TouchableOpacity, TextInput } from 'react-native';
-import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
+import { SafeAreaView, View, Text, StyleSheet, StatusBar, TouchableOpacity } from 'react-native';
 
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from "../assets/colors";
 
-function Timer({ navigation }) {
-
-    const [toggle, setToggle] = useState(false);
+function Timer({ workoutState }) {
 
     const [seconds, setSeconds] = useState(0);
     const [minutes, setMinutes] = useState(0);
@@ -32,46 +28,33 @@ function Timer({ navigation }) {
         return () => clearInterval(timer);
     });
 
-    const shiftLeft = () => {
-
+    const saveLog = () => {
+        let strTimer = (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+        global.logTime = strTimer;
+        global.exerciseHistory = global.exerciseBegin;
+        workoutState(false);
     }
 
     return (
         <SafeAreaView>
             <View style={{ backgroundColor: colors.blackLite, borderRadius: 15 }}>
+                {/*Cancel and Save Buttons*/}
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', paddingTop: 20, paddingHorizontal: 10 }}>
-                    <TouchableOpacity style={{
-                        shadowColor: 'black', shadowRadius: 1, shadowOffset: { width: 1, height: 2, },
-                        shadowOpacity: 0.5, height: 60, width: 70, backgroundColor: colors.red, borderRadius: 10, justifyContent: 'center'
-                    }}>
-                        <Text style={styles.btn}>Cancel</Text>
+                    <TouchableOpacity style={styles.btnCancel} onPress={() => {workoutState(false);}}>
+                        <Text style={styles.lblBtn}>Cancel</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        justifyContent: 'center', height: 60, width: 70, backgroundColor: colors.blue, borderRadius: 10, shadowColor: 'black',
-                        shadowRadius: 1,
-                        shadowOffset: { width: 3, height: 2, },
-                        shadowOpacity: 0.5,
-                    }}>
-                        <Text style={styles.btn}>Save</Text>
+                    <TouchableOpacity style={styles.btnSave} onPress={() => {saveLog();}}>
+                        <Text style={styles.lblBtn}>Save</Text>
                     </TouchableOpacity>
                 </View>
+
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignContent: 'flex-start' }}>
-                    <Text style={{ padding: 20, fontSize: 30, fontWeight: 'bold', color: colors.white }}>Timer: </Text>
-                    <Text style={{ padding: 20, fontSize: 30, fontWeight: 'bold', color: colors.white }}>{minutes < 10 ? '0' + minutes : minutes}: {seconds < 10 ? '0' + seconds : seconds}</Text>
+                    <Text style={styles.lblTimer}>Timer: </Text>
+                    <Text style={styles.lblTimer}>
+                        {minutes < 10 ? '0' + minutes : minutes}: {seconds < 10 ? '0' + seconds : seconds}
+                    </Text>
                 </View>
-                {/* <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                    <TouchableOpacity onPress={() => [setToggle(!toggle),]} style={styles.addExercise}>
-                        <Ionicons name="add-circle-outline" color={colors.green} size={30} />
-                        <Text style={{ paddingTop: 8, paddingLeft: 8, color: colors.green, fontWeight: 'bold' }}>Add Exercises</Text>
-                    </TouchableOpacity>
-                    {toggle && <InputExercise />}
-                </View> */}
             </View>
-            {/* <View>
-                <ScrollView style={styles.scrollView}>
-                    <Text style={{ color: colors.white }}>...</Text>
-                </ScrollView>
-            </View> */}
         </SafeAreaView>
     );
 }
@@ -85,39 +68,37 @@ const styles = StyleSheet.create({
         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
         paddingHorizontal: 15,
     },
-    scrollView: {
-        borderColor: colors.green,
-        borderWidth: 3,
-        margin: 10,
-        marginTop: 10,
-        borderRadius: 10,
-        height: '62%'
-
-    },
-    addExercise: {
-        flexDirection: 'row',
-    },
-    txtSingleFactorInfo: {
-        height: 30,
-        width: 150,
-        justifyContent: 'center',
-        paddingLeft: 25,
-        paddingRight: 25,
-        paddingBottom: 8,
-        borderWidth: 2,
-        borderColor: 'black',
-        fontSize: 15,
-        backgroundColor: colors.white,
-        color: colors.black,
-        shadowColor: 'black',
-        shadowRadius: 1,
-        shadowOffset: { width: 3, height: 2, },
-        shadowOpacity: 0.5,
-    },
-    btn: {
+    lblBtn: {
         alignSelf: 'center',
         color: colors.white,
         fontWeight: 'bold',
         fontSize: 20,
     },
+    lblTimer: { 
+        padding: 20, 
+        fontSize: 30, 
+        fontWeight: 'bold', 
+        color: colors.white 
+    }, 
+    btnCancel: {
+        justifyContent: 'center',
+        height: 60, 
+        width: 70, 
+        shadowColor: 'black', 
+        shadowRadius: 1, 
+        shadowOffset: { width: 1, height: 2, },
+        shadowOpacity: 0.5, 
+        backgroundColor: colors.red, 
+        borderRadius: 10
+    },
+    btnSave: {
+        justifyContent: 'center', 
+        height: 60, width: 70, 
+        backgroundColor: colors.blue, 
+        borderRadius: 10, 
+        shadowColor: 'black',
+        shadowRadius: 1,
+        shadowOffset: { width: 3, height: 2, },
+        shadowOpacity: 0.5
+    }
 })
