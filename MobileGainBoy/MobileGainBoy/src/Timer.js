@@ -4,7 +4,6 @@ import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from "../assets/colors";
-import InputExercise from "./InputExercise";
 
 function Timer({ navigation }) {
 
@@ -41,13 +40,13 @@ function Timer({ navigation }) {
         <SafeAreaView>
             <View style={{ backgroundColor: colors.blackLite, borderRadius: 15 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', paddingTop: 20, paddingHorizontal: 10 }}>
-                    <TouchableOpacity onPress={() => { navigation.navigate('Begin') }} style={{
+                    <TouchableOpacity style={{
                         shadowColor: 'black', shadowRadius: 1, shadowOffset: { width: 1, height: 2, },
                         shadowOpacity: 0.5, height: 60, width: 70, backgroundColor: colors.red, borderRadius: 10, justifyContent: 'center'
                     }}>
                         <Text style={styles.btn}>Cancel</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { navigation.navigate('Begin') }} style={{
+                    <TouchableOpacity style={{
                         justifyContent: 'center', height: 60, width: 70, backgroundColor: colors.blue, borderRadius: 10, shadowColor: 'black',
                         shadowRadius: 1,
                         shadowOffset: { width: 3, height: 2, },

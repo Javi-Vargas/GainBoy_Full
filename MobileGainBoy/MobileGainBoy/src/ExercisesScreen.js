@@ -213,6 +213,8 @@ const ExercisesScreen = ({ navigation }) => {
 }
 
 const Card = ({ data, renderState }) => {
+    const [addedToWorkout, setAddedToWorkout] = useState(false);
+    
     const deleteWorkout = async (workoutName) => {
         var obj;
 
@@ -263,9 +265,25 @@ const Card = ({ data, renderState }) => {
         ])
     }
 
-    const sendExercise = (workoutName) => {
-        let index = global.exercises.findIndex(obj => obj.name === workoutName);
-        global.exerciseHistory.push(global.exercises[index]);
+    const toggleSendToWorkout = (workoutName) => {
+        // If it has been added to workout and button is pressed, remove from BeginWorkout list
+        if (wasAdded(workoutName)) {
+            let removeIndex = global.exerciseBegin.findIndex(obj => obj.name === workoutName);
+            global.exerciseBegin.splice(removeIndex, 1);
+        }
+        // Add to BeginWorkout list
+        else {
+            let exerciseIndex = global.exercises.findIndex(obj => obj.name === workoutName);
+            global.exerciseBegin.push(global.exercises[exerciseIndex]);
+        }
+        setAddedToWorkout(!addedToWorkout);
+    }
+
+    const wasAdded = (workoutName) => {
+        let isEmpty = (global.exerciseBegin.length == 0);
+        let validIndex = (global.exerciseBegin.findIndex(obj => obj.name === workoutName) > -1);
+        let res = !isEmpty && validIndex;
+        return (res);
     }
 
     return (
@@ -283,7 +301,7 @@ const Card = ({ data, renderState }) => {
                 <View style={{ height: 10 }} />
             </View>
 
-            {/*Edit and Delete and Send icons*/}
+            {/*Edit, Delete, Send icons*/}
             <View style={{ paddingTop: 20, flexDirection: 'row', justifyContent: 'space-evenly' }}>
                 <TouchableOpacity onPress={() => { editCard(data.name); }}>
                     <Feather name='edit' size={25} color={colors.CJpurple} style={{ marginRight: 5 }} />
@@ -293,8 +311,9 @@ const Card = ({ data, renderState }) => {
                     <Ionicons name="trash-outline" color={colors.red} size={25} />
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => { sendExercise(data.name); }}>
-                    <Ionicons name="arrow-redo-circle-outline" color={'darkblue'} size={25} />
+                <TouchableOpacity onPress={() => { toggleSendToWorkout(data.name); }}>
+                    <Ionicons name={wasAdded(data.name) ? "remove-circle-outline" : "add-circle-outline"} 
+                        color={colors.blue} size={28} />
                 </TouchableOpacity>
             </View>
         </View>
