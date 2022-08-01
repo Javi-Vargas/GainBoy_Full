@@ -148,7 +148,7 @@ const ExercisesScreen = ({ navigation }) => {
                     name: global.exercises[i].name,
                     reps: global.exercises[i].reps.toString(),
                     sets: global.exercises[i].sets.toString(),
-                    totalWeight: global.exercises[i].totalWeight.toString(),
+                    weightPerRep: global.exercises[i].totalWeight.toString(),
                     timeSpent: global.exercises[i].timeSpent.toString(),
                     isEditing: i == indexOfCardEdit
                 });
@@ -215,7 +215,7 @@ const ExercisesScreen = ({ navigation }) => {
 
 const Card = ({ data, renderState }) => {
     const [addedToWorkout, setAddedToWorkout] = useState(false);
-    
+
     const deleteWorkout = async (workoutName) => {
         var obj;
 
@@ -296,10 +296,10 @@ const Card = ({ data, renderState }) => {
                 <View style={{ height: 10 }} />
                 <Text style={styles.lblData}> Sets: {data.sets}    </Text>
                 <View style={{ height: 10 }} />
-                <Text style={styles.lblData}> Total Weight (lb): {data.totalWeight}</Text>
-                <View style={{ height: 10 }} />
+                <Text style={styles.lblData}> Weight Per Rep (lb): {data.weightPerRep}</Text>
+                {/* <View style={{ height: 10 }} />
                 <Text style={styles.lblData}> Time Spent: {data.timeSpent} </Text>
-                <View style={{ height: 10 }} />
+                <View style={{ height: 10 }} /> */}
             </View>
 
             {/*Edit, Delete, Send icons*/}
@@ -313,7 +313,7 @@ const Card = ({ data, renderState }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => { toggleSendToWorkout(data.name); }}>
-                    <Ionicons name={wasAdded(data.name) ? "remove-circle-outline" : "add-circle-outline"} 
+                    <Ionicons name={wasAdded(data.name) ? "remove-circle-outline" : "add-circle-outline"}
                         color={colors.blue} size={28} />
                 </TouchableOpacity>
             </View>
@@ -327,12 +327,12 @@ const CardEdit = ({ data, renderState }) => {
     const [exerciseName, setExerciseName] = useState('');
     const [reps, setReps] = useState('');
     const [sets, setSets] = useState('');
-    const [totalWeight, setTotalWeight] = useState('');
+    const [weightPerRep, setWeightPerRep] = useState('');
     const [timeSpent, setTimeSpent] = useState('');
 
     const updateWorkout = async (workoutName) => {
         var obj;
-        let jName, jReps, jSets, jTotalWeight, jTimeSpent;
+        let jName, jReps, jSets, jWeightPerRep, jTimeSpent;
 
         // <----------UNIT TESTING----------> 
         //  Automated test for updating a workout
@@ -340,7 +340,7 @@ const CardEdit = ({ data, renderState }) => {
             obj = {
                 _id: global.exerciseMap.get('something'), token: global.token,
                 name: 'somethingTheSequel', userId: '777', reps: '99', sets: '99',
-                totalWeight: '9000', timeSpent: '99'
+                weightPerRep: '9000', timeSpent: '99'
             };
         }
         // --------------------------------->
@@ -348,13 +348,14 @@ const CardEdit = ({ data, renderState }) => {
             jName = exerciseName == '' ? global.exercises[indexOfCardEdit].name : exerciseName.trim();
             jReps = reps == '' ? global.exercises[indexOfCardEdit].reps : reps.trim();
             jSets = sets == '' ? global.exercises[indexOfCardEdit].sets : sets.trim();
-            jTotalWeight = totalWeight == '' ? global.exercises[indexOfCardEdit].totalWeight : totalWeight.trim();
-            jTimeSpent = timeSpent == '' ? global.exercises[indexOfCardEdit].timeSpent : timeSpent.trim();
+            jWeightPerRep = weightPerRep == '' ? global.exercises[indexOfCardEdit].weightPerRep : weightPerRep.trim();
+            // jTimeSpent = timeSpent == '' ? global.exercises[indexOfCardEdit].timeSpent : timeSpent.trim();
 
             obj = {
                 _id: global.exerciseMap.get(workoutName), token: global.token,
                 name: jName, userId: global.userId, reps: jReps, sets: jSets,
-                totalWeight: jTotalWeight, timeSpent: jTimeSpent
+                weightPerRep: jWeightPerRep,
+                //timeSpent: jTimeSpent
             };
         }
 
@@ -378,15 +379,15 @@ const CardEdit = ({ data, renderState }) => {
                 global.exercises[indexOfCardEdit].name = jName;
                 global.exercises[indexOfCardEdit].reps = jReps;
                 global.exercises[indexOfCardEdit].sets = jSets;
-                global.exercises[indexOfCardEdit].totalWeight = jTotalWeight;
-                global.exercises[indexOfCardEdit].timeSpent = jTimeSpent;
+                global.exercises[indexOfCardEdit].weightPerRep = jWeightPerRep;
+                // global.exercises[indexOfCardEdit].timeSpent = jTimeSpent;
 
                 // Reset states
                 if (exerciseName != '') setExerciseName('');
                 if (reps != '') setReps('');
                 if (sets != '') setSets('');
-                if (totalWeight != '') setTotalWeight('');
-                if (timeSpent != '') setTimeSpent('');
+                if (weightPerRep != '') setWeightPerRep('');
+                // if (timeSpent != '') setTimeSpent('');
             }
 
             global.exercises[indexOfCardEdit].userId = global.userId;
@@ -425,23 +426,23 @@ const CardEdit = ({ data, renderState }) => {
                 </View>
                 <View style={{ height: 10 }} />
                 <View>
-                    <Text style={styles.lblTotalWeightEdit}>Total Weight (lb):</Text>
+                    <Text style={styles.lblTotalWeightEdit}>Weight Per Rep (lb):</Text>
 
                     {/*Have to give this offset to appear centered*/}
-                    <View style={{ paddingLeft: '11%' }}>
-                        <TextInput style={styles.txtBox} placeholder={data.totalWeight}
-                            onChangeText={(value) => setTotalWeight(value)} />
+                    <View style={{ paddingLeft: '15%' }}>
+                        <TextInput style={styles.txtBox} placeholder={data.weightPerRep}
+                            onChangeText={(value) => setWeightPerRep(value)} />
                     </View>
                 </View>
                 <View style={{ height: 10 }} />
                 <View>
-                    <Text style={styles.lblTimeSpentEdit}>Time Spent:</Text>
+                    {/* <Text style={styles.lblTimeSpentEdit}>Time Spent:</Text> */}
 
                     {/*Have to give this offset to appear centered*/}
-                    <View style={{ paddingLeft: '5%' }}>
+                    {/* <View style={{ paddingLeft: '5%' }}>
                         <TextInput style={styles.txtBox} placeholder={data.timeSpent}
                             onChangeText={(value) => setTimeSpent(value)} />
-                    </View>
+                    </View> */}
                 </View>
             </View>
 
@@ -544,7 +545,7 @@ const styles = StyleSheet.create({
     },
     txtSearch: {
         fontSize: 15,
-        width: '75%'
+        width: '75%',
     },
     searchBar: {
         height: 55,
