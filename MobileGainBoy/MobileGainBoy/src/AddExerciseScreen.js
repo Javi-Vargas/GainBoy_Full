@@ -107,14 +107,14 @@ const AddExerciseScreen = ({ navigation }) => {
                     <View style={styles.spaceContainer} />
 
                     <TextInput style={styles.txtBox}
-                        placeholder="Total Weight (in lbs):" placeholderTextColor={colors.black}
+                        placeholder="Weight Per Rep (lbs):" placeholderTextColor={colors.black}
                         onChangeText={(value) => setTotalWeight(value)} />
 
                     <View style={styles.spaceContainer} />
 
-                    <TextInput style={styles.txtBox}
+                    {/* <TextInput style={styles.txtBox}
                         placeholder="Time spent:" placeholderTextColor={colors.black}
-                        onChangeText={(value) => setTimeSpent(value)} />
+                        onChangeText={(value) => setTimeSpent(value)} /> */}
                 </View>
 
                 <View style={{ height: 15 }} />
