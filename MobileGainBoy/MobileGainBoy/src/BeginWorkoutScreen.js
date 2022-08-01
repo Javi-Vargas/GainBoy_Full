@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Component, Alert } from "react";
 import { SafeAreaView, View, Text, ScrollView, StyleSheet, StatusBar, TouchableOpacity, TextInput } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather'
@@ -9,23 +10,23 @@ import colors from "../assets/colors";
 
 const BeginWorkoutScreen = ({ navigation }) => {
     const [workoutBegan, setWorkoutBegan] = useState(false);
-    
+
     const beginWorkoutRender = () => {
         if (workoutBegan) {
-            return (<View style={{paddingTop: '10%'}}>
-                        <Timer workoutState={setWorkoutBegan}/>
-                    </View>)
+            return (<View style={{ paddingTop: '10%' }}>
+                <Timer workoutState={setWorkoutBegan} />
+            </View>)
         }
         else {
-            return (<View style={{paddingTop: '10%'}}>
-                        <TouchableOpacity onPress={() => { setWorkoutBegan(true); }} style={styles.beginBtn}>
-                            <Text style={{ color: colors.white, fontWeight: 'bold', fontSize: 20 }}>Begin FreeStyle Workout</Text>
-                        </TouchableOpacity>
-                    </View>
+            return (<View style={{ paddingTop: '10%' }}>
+                <TouchableOpacity onPress={() => { setWorkoutBegan(true); }} style={styles.beginBtn}>
+                    <Text style={{ color: colors.white, fontWeight: 'bold', fontSize: 20 }}>Begin FreeStyle Workout</Text>
+                </TouchableOpacity>
+            </View>
             );
         }
     }
-    
+
     {/**Renders Received Cards */ }
     const exercisesRender = () => {
         if (useIsFocused() && global.exerciseBegin.length != 0) {
@@ -38,11 +39,11 @@ const BeginWorkoutScreen = ({ navigation }) => {
             );
         }
         else {
-            return (<View style={{alignItems: 'center', paddingTop: '45%'}}>
-                        <Text style={styles.lblScrollView}>
-                            Add exercises from the Exercises page to your workout and press the button to begin workout
-                        </Text>
-                    </View>);
+            return (<View style={{ alignItems: 'center', paddingTop: '45%' }}>
+                <Text style={styles.lblScrollView}>
+                    Add exercises from the Exercises page to your workout and press the button to begin workout
+                </Text>
+            </View>);
         }
     }
 
@@ -64,15 +65,15 @@ const Card = ({ data }) => {
         <View style={styles.cardContainer}>
             <View style={styles.cardDataContainer}>
                 <Text style={styles.lblData}> Workout: {data.name} </Text>
-                <View style={styles.cardDataSpace}/>
+                <View style={styles.cardDataSpace} />
                 <Text style={styles.lblData}> Reps: {data.reps}    </Text>
-                <View style={styles.cardDataSpace}/>
+                <View style={styles.cardDataSpace} />
                 <Text style={styles.lblData}> Sets: {data.sets}    </Text>
-                <View style={styles.cardDataSpace}/>
-                <Text style={styles.lblData}> Total Weight (lb): {data.totalWeight}</Text>
-                <View style={styles.cardDataSpace}/>
-                <Text style={styles.lblData}> Time Spent: {data.timeSpent} </Text>
-                <View style={styles.cardDataSpace}/>
+                <View style={styles.cardDataSpace} />
+                <Text style={styles.lblData}> Weight Per Rep(lb): {data.totalWeight}</Text>
+                <View style={styles.cardDataSpace} />
+                {/* <Text style={styles.lblData}> Time Spent: {data.timeSpent} </Text>
+                <View style={styles.cardDataSpace} /> */}
             </View>
         </View>
     )
@@ -115,19 +116,19 @@ const styles = StyleSheet.create({
         height: 10
     },
     beginBtn: {
-        flexDirection: 'row', 
-        marginBottom: 80, 
-        justifyContent: 'center', 
-        alignContent: 'center', 
-        alignItems: 'center', 
-        paddingTop: 20, 
-        paddingBottom: 20, 
-        backgroundColor: colors.CJpurple, 
-        borderRadius: 10, 
-        top: "10%", 
-        shadowColor: 'black', 
-        shadowRadius: 3, 
-        shadowOffset: { width: -5, height: 7, }, 
+        flexDirection: 'row',
+        marginBottom: 80,
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        paddingTop: 20,
+        paddingBottom: 20,
+        backgroundColor: colors.CJpurple,
+        borderRadius: 10,
+        top: "10%",
+        shadowColor: 'black',
+        shadowRadius: 3,
+        shadowOffset: { width: -5, height: 7, },
         shadowOpacity: 0.5,
     },
     lblData: {
