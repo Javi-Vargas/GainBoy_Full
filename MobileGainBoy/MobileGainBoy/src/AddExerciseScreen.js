@@ -35,8 +35,8 @@ const AddExerciseScreen = ({ navigation }) => {
         else {
             obj = {
                 token: global.token, name: exerciseName.trim(),
-                userId: global.userId, reps: reps.trim(), sets: sets.trim(),
-                totalWeight: totalWeight.trim(), timeSpent: timeSpent.trim()
+                userId: global.userId, reps: Number(reps.trim()), sets: Number(sets.trim()),
+                totalWeight: Number(totalWeight.trim()), timeSpent: -1
             };
         }
 

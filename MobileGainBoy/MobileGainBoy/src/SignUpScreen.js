@@ -54,7 +54,7 @@ function SignUpScreen({ navigation }) {
             // --------------------------------->
             else {
                 obj = {
-                    fullname: txtUserFullName.trim(), email: txtEmail.trim(),
+                    email: txtEmail.trim(), fullname: txtUserFullName.trim(),
                     password: txtPassword.trim(), passwordVerify: txtConfirmPassword.trim()
                 };
             }

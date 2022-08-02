@@ -139,7 +139,7 @@ function LoginScreen({ navigation }) {
 
             <View style={{ height: 70 }} />
 
-            <View style={{ paddingLeft: '50%', paddingTop: '20%' }}>
+            <View style={{ paddingLeft: '50%', paddingTop: '10%' }}>
                 <View style={styles.indentContainer}>
 
                     {/*Sign Up Button.*/}

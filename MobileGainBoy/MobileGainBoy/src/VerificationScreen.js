@@ -10,45 +10,10 @@ import colors from "../assets/colors"
 
 function VerificationScreen({ navigation }) {
 
-    // The error message state
-    const [txtError, setTextError] = useState('');
-    
     const finish = async () => {
-        try {
-            var obj = { email: global.email, password: global.password, passwordVerify: global.password };
-            var js = JSON.stringify(obj);
-
-            const response = await fetch(
-                'https://gainzboy.herokuapp.com/auth/Register',
-                { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
-            );
-
-            var res = JSON.parse(await response.text());
-
-            if (res.errorMessage == "An account with this email already exists.")
-            {
-                // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
-                // is a function called navigate() that takes the name of another screen, in this case 'Login', again defined in App.js
-                navigation.navigate('Login');
-            }
-            else
-            {
-                setTextError(res.errorMessage);
-            }
-        }
-        catch (e) {
-            setTextError(e.message);
-        }
-    }
-
-    // The render of the error message if there was one
-    const errorRender = () => {
-        if (txtError != '')
-            return (<View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <Text style={styles.txtError}>{txtError}</Text>
-                    </View>);
-        else
-            return (<View/>);
+        // Navigation is a property given from the Stack.Screen component in App.js. Inside this 'navigation' property 
+        // is a function called navigate() that takes the name of another screen, in this case 'Login', again defined in App.js
+        navigation.navigate('Login');
     }
 
     return (
@@ -81,8 +46,6 @@ function VerificationScreen({ navigation }) {
                     </Text>
                 </TouchableOpacity>
             </View>
-
-            {errorRender()}
         </SafeAreaView>
     );
 }

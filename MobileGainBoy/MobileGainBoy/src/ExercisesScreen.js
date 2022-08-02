@@ -323,7 +323,7 @@ const CardEdit = ({ data, renderState }) => {
 
     const updateWorkout = async (workoutName) => {
         var obj;
-        let jName, jReps, jSets, jWeightPerRep, jTimeSpent;
+        let jName, jReps, jSets, jWeightPerRep;
 
         // <----------UNIT TESTING----------> 
         //  Automated test for updating a workout
@@ -339,12 +339,12 @@ const CardEdit = ({ data, renderState }) => {
             jName = exerciseName == '' ? exercises[indexOfCardEdit].name : exerciseName.trim();
             jReps = reps == '' ? exercises[indexOfCardEdit].reps : reps.trim();
             jSets = sets == '' ? exercises[indexOfCardEdit].sets : sets.trim();
-            jWeightPerRep = weightPerRep == '' ? exercises[indexOfCardEdit].weightPerRep : weightPerRep.trim();
+            jWeightPerRep = weightPerRep == '' ? exercises[indexOfCardEdit].totalWeight : weightPerRep.trim();
 
             obj = {
-                _id: global.exerciseMap.get(workoutName), token: global.token,
-                name: jName, userId: global.userId, reps: jReps, sets: jSets,
-                weightPerRep: jWeightPerRep, timeSpent: ''
+                token: global.token, _id: global.exerciseMap.get(workoutName),
+                name: jName, userId: global.userId, reps: Number(jReps), sets: Number(jSets),
+                totalWeight: Number(jWeightPerRep), timeSpent: -1
             };
         }
 
@@ -368,7 +368,7 @@ const CardEdit = ({ data, renderState }) => {
                 exercises[indexOfCardEdit].name = jName;
                 exercises[indexOfCardEdit].reps = jReps;
                 exercises[indexOfCardEdit].sets = jSets;
-                exercises[indexOfCardEdit].weightPerRep = jWeightPerRep;
+                exercises[indexOfCardEdit].totalWeight = jWeightPerRep;
                 exercises[indexOfCardEdit].timeSpent = '';
 
                 // Reset states
