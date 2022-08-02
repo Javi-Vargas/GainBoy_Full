@@ -22,10 +22,12 @@ const UNIT_SEARCH = false;
 
 let workoutCards = new Array();
 let indexOfCardEdit = -1;
+let exercises = [];
 
 const ExercisesScreen = ({ navigation }) => {
 
     const [txtSearch, setTextSearch] = useState('');
+    const [showAll, setShowAll] = useState(true);
 
     // The error message state
     const [txtError, setTextError] = useState('');
@@ -45,10 +47,12 @@ const ExercisesScreen = ({ navigation }) => {
         global.exerciseHistory = [];
         global.logTime = "";
         workoutCards = [];
+        exercises = [];
+        indexOfCardEdit = -1;
         navigation.navigate('Login');
     }
 
-    const displayWorkouts = async () => {
+    const displayExercises = async () => {
         var obj;
 
         // <----------UNIT TESTING----------> 
@@ -75,6 +79,7 @@ const ExercisesScreen = ({ navigation }) => {
         }
         else {
             global.exercises = res.results;
+            exercises = global.exercises;
 
             if (txtError != '') setTextError('');
 
@@ -83,44 +88,31 @@ const ExercisesScreen = ({ navigation }) => {
         }
     }
 
-    const search = async () => {
+    const search = () => {
         if (txtSearch == '') return;
 
-        var obj;
+        exercises = [];
 
-        // <----------UNIT TESTING----------> 
-        //  Automated test for searching
-        if (UNIT_SEARCH) {
-            obj = { token: global.token, _id: global.exerciseMap.get('Front Squats') };
-        }
-        // --------------------------------->
-        else {
-            obj = { token: global.token, _id: global.exerciseMap.get(txtSearch) };
+        for (let i = 0; i < global.exercises.length; i++) {
+            // If the string to search is a substring of an exercise, it's a successfull partial search
+            if (global.exercises[i].name.toLowerCase().indexOf(txtSearch.toLowerCase()) !== -1) {
+                exercises.push(global.exercises[i]);
+            }
         }
 
-        var js = JSON.stringify(obj);
-
-        const response = await fetch(
-            'https://gainzboy.herokuapp.com/auth/displayOneWorkout',
-            { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }
-        );
-
-        let res = JSON.parse(await response.text());
-
-        if (res.errorMessage != undefined) {
-            setTextError('No exercise matches that search');
-            global.exercises = [];
-        }
-        else {
-            global.exercises = res.results;
-
-            if (txtError != '') setTextError('');
-        }
-
-        // Toggle render update to force a render
-        setRenderUpdate(!renderUpdate);
+        setShowAll(true);
     }
 
+    const toggleExercisesDisplay = () => {
+        if (showAll) {
+            displayExercises();
+            setShowAll(false);
+        }
+        else {
+            exercises = [];
+            setShowAll(true);
+        }
+    }
 
     // The render of the error message if there was one
     const errorRender = () => {
@@ -135,21 +127,20 @@ const ExercisesScreen = ({ navigation }) => {
     const cardsRender = () => {
         let isFocused = useIsFocused();
 
-        if (isFocused && global.exercises.length != 0) {
+        if (isFocused && exercises.length != 0) {
             // Since we're getting the workouts again, reset
             workoutCards = [];
 
-            for (let i = 0; i < global.exercises.length; i++) {
-                if (!global.exerciseMap.has(global.exercises[i].name)) {
-                    global.exerciseMap.set(global.exercises[i].name, global.exercises[i]._id);
+            for (let i = 0; i < exercises.length; i++) {
+                if (!global.exerciseMap.has(exercises[i].name)) {
+                    global.exerciseMap.set(exercises[i].name, exercises[i]._id);
                 }
 
                 workoutCards.push({
-                    name: global.exercises[i].name,
-                    reps: global.exercises[i].reps.toString(),
-                    sets: global.exercises[i].sets.toString(),
-                    weightPerRep: global.exercises[i].totalWeight.toString(),
-                    timeSpent: global.exercises[i].timeSpent.toString(),
+                    name: exercises[i].name,
+                    reps: exercises[i].reps.toString(),
+                    sets: exercises[i].sets.toString(),
+                    weightPerRep: exercises[i].totalWeight.toString(),
                     isEditing: i == indexOfCardEdit
                 });
             }
@@ -187,8 +178,10 @@ const ExercisesScreen = ({ navigation }) => {
                 </TouchableOpacity>
 
                 <View style={{ paddingTop: 8, paddingLeft: '52%' }}>
-                    <TouchableOpacity onPress={() => { displayWorkouts() }}>
-                        <Text style={{ fontSize: 15, color: colors.green }}>Show All</Text>
+                    <TouchableOpacity onPress={() => { toggleExercisesDisplay() }}>
+                        <Text style={{ fontSize: 15, color: colors.green }}>
+                            {showAll ? 'Show All' : 'Hide All'}
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -197,7 +190,7 @@ const ExercisesScreen = ({ navigation }) => {
                 <TextInput style={styles.txtSearch} placeholder="Search Saved Workouts"
                     onChangeText={(value) => setTextSearch(value)} />
 
-                <TouchableOpacity style={{ marginTop: 3, marginLeft: 50 }} onPress={() => { search(); }}>
+                <TouchableOpacity style={{ marginTop: 3, marginLeft: 50 }} onPress={search}>
                     <Feather name='search' size={28} color="black" />
                 </TouchableOpacity>
             </View>
@@ -247,13 +240,15 @@ const Card = ({ data, renderState }) => {
             let index = global.exercises.findIndex(obj => obj.name === workoutName);
             global.exercises.splice(index, 1);
 
+            exercises = global.exercises;
+
             // Toggle render update to force a render
             renderState[1](!renderState[0]);
         }
     }
 
     const editCard = (workoutName) => {
-        indexOfCardEdit = global.exercises.findIndex(obj => obj.name === workoutName);
+        indexOfCardEdit = exercises.findIndex(obj => obj.name === workoutName);
 
         // Toggle render update to force a render
         renderState[1](!renderState[0]);
@@ -274,8 +269,8 @@ const Card = ({ data, renderState }) => {
         }
         // Add to BeginWorkout list
         else {
-            let exerciseIndex = global.exercises.findIndex(obj => obj.name === workoutName);
-            global.exerciseBegin.push(global.exercises[exerciseIndex]);
+            let exerciseIndex = exercises.findIndex(obj => obj.name === workoutName);
+            global.exerciseBegin.push(exercises[exerciseIndex]);
         }
         setAddedToWorkout(!addedToWorkout);
     }
@@ -297,9 +292,6 @@ const Card = ({ data, renderState }) => {
                 <Text style={styles.lblData}> Sets: {data.sets}    </Text>
                 <View style={{ height: 10 }} />
                 <Text style={styles.lblData}> Weight Per Rep (lb): {data.weightPerRep}</Text>
-                {/* <View style={{ height: 10 }} />
-                <Text style={styles.lblData}> Time Spent: {data.timeSpent} </Text>
-                <View style={{ height: 10 }} /> */}
             </View>
 
             {/*Edit, Delete, Send icons*/}
@@ -328,7 +320,6 @@ const CardEdit = ({ data, renderState }) => {
     const [reps, setReps] = useState('');
     const [sets, setSets] = useState('');
     const [weightPerRep, setWeightPerRep] = useState('');
-    const [timeSpent, setTimeSpent] = useState('');
 
     const updateWorkout = async (workoutName) => {
         var obj;
@@ -345,17 +336,15 @@ const CardEdit = ({ data, renderState }) => {
         }
         // --------------------------------->
         else {
-            jName = exerciseName == '' ? global.exercises[indexOfCardEdit].name : exerciseName.trim();
-            jReps = reps == '' ? global.exercises[indexOfCardEdit].reps : reps.trim();
-            jSets = sets == '' ? global.exercises[indexOfCardEdit].sets : sets.trim();
-            jWeightPerRep = weightPerRep == '' ? global.exercises[indexOfCardEdit].weightPerRep : weightPerRep.trim();
-            // jTimeSpent = timeSpent == '' ? global.exercises[indexOfCardEdit].timeSpent : timeSpent.trim();
+            jName = exerciseName == '' ? exercises[indexOfCardEdit].name : exerciseName.trim();
+            jReps = reps == '' ? exercises[indexOfCardEdit].reps : reps.trim();
+            jSets = sets == '' ? exercises[indexOfCardEdit].sets : sets.trim();
+            jWeightPerRep = weightPerRep == '' ? exercises[indexOfCardEdit].weightPerRep : weightPerRep.trim();
 
             obj = {
                 _id: global.exerciseMap.get(workoutName), token: global.token,
                 name: jName, userId: global.userId, reps: jReps, sets: jSets,
-                weightPerRep: jWeightPerRep,
-                //timeSpent: jTimeSpent
+                weightPerRep: jWeightPerRep, timeSpent: ''
             };
         }
 
@@ -373,25 +362,24 @@ const CardEdit = ({ data, renderState }) => {
         }
         else {
             if (UNIT_UPDATE_WORKOUT) {
-                global.exercises[indexOfCardEdit].name = 'somethingTheSequel';
+                exercises[indexOfCardEdit].name = 'somethingTheSequel';
             }
             else {
-                global.exercises[indexOfCardEdit].name = jName;
-                global.exercises[indexOfCardEdit].reps = jReps;
-                global.exercises[indexOfCardEdit].sets = jSets;
-                global.exercises[indexOfCardEdit].weightPerRep = jWeightPerRep;
-                // global.exercises[indexOfCardEdit].timeSpent = jTimeSpent;
+                exercises[indexOfCardEdit].name = jName;
+                exercises[indexOfCardEdit].reps = jReps;
+                exercises[indexOfCardEdit].sets = jSets;
+                exercises[indexOfCardEdit].weightPerRep = jWeightPerRep;
+                exercises[indexOfCardEdit].timeSpent = '';
 
                 // Reset states
                 if (exerciseName != '') setExerciseName('');
                 if (reps != '') setReps('');
                 if (sets != '') setSets('');
                 if (weightPerRep != '') setWeightPerRep('');
-                // if (timeSpent != '') setTimeSpent('');
             }
 
-            global.exercises[indexOfCardEdit].userId = global.userId;
-            global.exercises[indexOfCardEdit]._id = global.exerciseMap.get(workoutName);
+            exercises[indexOfCardEdit].userId = global.userId;
+            exercises[indexOfCardEdit]._id = global.exerciseMap.get(workoutName);
 
             finishEdit();
         }
@@ -435,15 +423,6 @@ const CardEdit = ({ data, renderState }) => {
                     </View>
                 </View>
                 <View style={{ height: 10 }} />
-                <View>
-                    {/* <Text style={styles.lblTimeSpentEdit}>Time Spent:</Text> */}
-
-                    {/*Have to give this offset to appear centered*/}
-                    {/* <View style={{ paddingLeft: '5%' }}>
-                        <TextInput style={styles.txtBox} placeholder={data.timeSpent}
-                            onChangeText={(value) => setTimeSpent(value)} />
-                    </View> */}
-                </View>
             </View>
 
             {/*Save And Exit icons*/}

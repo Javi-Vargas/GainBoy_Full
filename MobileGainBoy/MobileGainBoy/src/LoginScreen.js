@@ -9,7 +9,7 @@ import {
 import colors from '../assets/colors'
 
 // PREPROCESSORS for Unit testing
-const UNIT_VALID_LOGIN   = true;
+const UNIT_VALID_LOGIN   = false;
 const UNIT_INVALID_LOGIN = false;
 const UNIT_NOT_VERIFIED  = false;
 
