@@ -9,9 +9,9 @@ import {
 import colors from '../assets/colors'
 
 // PREPROCESSORS for Unit testing
-const UNIT_VALID_LOGIN = true;
+const UNIT_VALID_LOGIN   = true;
 const UNIT_INVALID_LOGIN = false;
-const UNIT_NOT_VERIFIED = false;
+const UNIT_NOT_VERIFIED  = false;
 
 function LoginScreen({ navigation }) {
 
@@ -43,9 +43,9 @@ function LoginScreen({ navigation }) {
             }
             // Automated test for wrong email/password combination
             else if (UNIT_INVALID_LOGIN) {
-                obj = { email: 'no_way_this_would_ever_be_valid@wut.com', password: 'SUPER_STRONG_PASSWORD' };
+                obj = { email: 'no_way_this_would_ever_be_valid@cop4331.com', password: 'SUPER_STRONG_PASSWORD' };
             }
-            // Automated test for wrong email/password combination
+            // Automated test for unverified users
             else if (UNIT_NOT_VERIFIED) {
                 obj = { email: 'do_not_verify_cop4331@gmail.com', password: 'COP4331' };
             }
