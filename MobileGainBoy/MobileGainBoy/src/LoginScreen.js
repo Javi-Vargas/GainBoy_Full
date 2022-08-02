@@ -9,9 +9,9 @@ import {
 import colors from '../assets/colors'
 
 // PREPROCESSORS for Unit testing
-const UNIT_VALID_LOGIN   = false;
+const UNIT_VALID_LOGIN = false;
 const UNIT_INVALID_LOGIN = false;
-const UNIT_NOT_VERIFIED  = false;
+const UNIT_NOT_VERIFIED = false;
 
 function LoginScreen({ navigation }) {
 
@@ -96,6 +96,17 @@ function LoginScreen({ navigation }) {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.black }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', top: '20%' }}>
+                <View style={styles.LogoContainer}>
+                    <Text style={styles.GAINZ}>
+                        GAINZ
+                    </Text>
+                    <Text style={styles.BOY}>
+                        BOY
+                    </Text>
+                </View>
+            </View>
+
             <View style={{ height: '25%' }} />
 
             {/*Text Entries.*/}
@@ -163,6 +174,16 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         transform: [{ rotate: "-50deg" }],
     },
+    LogoContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        height: 70,
+        width: 220,
+        backgroundColor: colors.blackLite,
+        borderRadius: 100,
+    },
     txtSingleFactorInfo: {
         height: 65,
         width: 300,
@@ -210,6 +231,13 @@ const styles = StyleSheet.create({
     txtError: {
         fontSize: 20,
         color: colors.red
+    },
+    GAINZ: {
+        fontSize: 30,
+        fontWeight: 'bold'
+    },
+    BOY: {
+        fontSize: 30,
     }
 });
 
