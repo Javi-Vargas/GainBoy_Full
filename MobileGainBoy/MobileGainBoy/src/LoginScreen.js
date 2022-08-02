@@ -51,7 +51,8 @@ function LoginScreen({ navigation }) {
             }
             // --------------------------------->
             else {
-                obj = { email: txtEmail.trim(), password: txtPassword.trim() };
+                //txtEmail = txtEmail.toLowerCase();
+                obj = { email: txtEmail.toLowerCase().trim(), password: txtPassword.trim() };
             }
 
             var js = JSON.stringify(obj);
